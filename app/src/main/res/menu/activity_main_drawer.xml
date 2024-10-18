@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group>
+        <item android:id="@+id/nav_item_uno"
+            android:icon="@drawable/abc_vector_test"
+            android:title="Inicio"/>
+    </group>
+
+    <item android:title="Registros">
+        <menu>
+            <item android:id="@+id/nav_item_dos_uno"
+                android:icon="@drawable/abc_vector_test"
+                android:title="Ingreso"/>
+            <item android:id="@+id/nav_item_dos_dos"
+                android:icon="@drawable/abc_vector_test"
+                android:title="Salida"/>
+        </menu>
+    </item>
+
+    <item android:title="Permisos">
+        <menu>
+            <item android:id="@+id/nav_item_tres"
+                android:icon="@drawable/abc_vector_test"
+                android:title="Permisos"/>
+        </menu>
+    </item>
+
+    <item android:title="Consultas">
+        <menu>
+            <item android:id="@+id/nav_item_cuatro_uno"
+                android:icon="@drawable/abc_vector_test"
+                android:title="Ingreso"/>
+            <item android:id="@+id/nav_item_cuatro_dos"
+                android:icon="@drawable/abc_vector_test"
+                android:title="Salida"/>
+        </menu>
+    </item>
+
+
+    <item android:title="Nosotros">
+        <menu>
+            <item android:id="@+id/nav_item_cinco"
+                android:icon="@drawable/abc_vector_test"
+                android:title="Acerca de Nosotros"/>
+        </menu>
+    </item>
+
+    <group>
+        <item android:id="@+id/nav_item_seis"
+            android:icon="@drawable/abc_vector_test"
+            android:title="Salir"/>
+    </group>
+
+</menu>

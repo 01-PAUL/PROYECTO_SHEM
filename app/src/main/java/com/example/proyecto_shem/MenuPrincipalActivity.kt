@@ -1,0 +1,134 @@
+package com.example.proyecto_shem;
+
+import android.content.Intent
+import android.content.res.Configuration
+import android.os.Bundle
+import android.view.MenuItem
+import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
+import com.google.android.material.navigation.NavigationView
+
+class MenuPrincipalActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+    private lateinit var drawer: DrawerLayout
+    private lateinit var toggle: ActionBarDrawerToggle
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        setContentView(R.layout.activity_menu_principal)
+
+        val toolbar: Toolbar = findViewById(R.id.toolbar_main)
+        setSupportActionBar(toolbar)
+
+        drawer = findViewById(R.id.drawer_layout)
+
+        toggle = ActionBarDrawerToggle(
+            this,
+            drawer,
+            toolbar,
+            R.string.navigation_drawer_oper,
+            R.string.navigation_drawer_close
+        )
+        drawer.addDrawerListener(toggle)
+
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setHomeButtonEnabled(true)
+
+        val navigationView: NavigationView = findViewById(R.id.nav_view)
+        navigationView.setNavigationItemSelectedListener(this)
+    }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+
+        when (item.itemId) {
+            R.id.nav_item_uno -> Toast.makeText(this, "Inicio", Toast.LENGTH_SHORT).show()
+            R.id.nav_item_dos_uno -> {
+                // Mostrar Toast
+                Toast.makeText(this, "Ingreso", Toast.LENGTH_SHORT).show()
+
+                // Navegar a la interfaz de Ingreso
+                val intent = Intent(this, RegistroIngresoActivity::class.java)
+                startActivity(intent)
+            }
+
+            R.id.nav_item_dos_dos -> {
+                // Mostrar Toast
+                Toast.makeText(this, "Salida", Toast.LENGTH_SHORT).show()
+
+                // Navegar a la interfaz de Salida
+                val intent = Intent(this, RegistroSalidaActivity::class.java)
+                startActivity(intent)
+            }
+
+            R.id.nav_item_tres -> {
+                // Mostrar Toast
+                Toast.makeText(this, "Permisos", Toast.LENGTH_SHORT).show()
+
+                // Navegar a la interfaz de Permisos
+                val intent = Intent(this, RegistroPermisoActivity::class.java)
+                startActivity(intent)
+            }
+
+            R.id.nav_item_cuatro_uno -> {
+                // Mostrar Toast
+                Toast.makeText(this, "Ingreso", Toast.LENGTH_SHORT).show()
+
+                // Navegar a la interfaz de Ingreso
+                val intent = Intent(this, ConsultaIngresoActivity::class.java)
+                startActivity(intent)
+            }
+
+            R.id.nav_item_cuatro_dos -> {
+                // Mostrar Toast
+                Toast.makeText(this, "Salida", Toast.LENGTH_SHORT).show()
+
+                // Navegar a la interfaz de Salida
+                val intent = Intent(this, ConsultaSalidaActivity::class.java)
+                startActivity(intent)
+            }
+
+            R.id.nav_item_cinco -> {
+                // Mostrar Toast
+                Toast.makeText(this, "Acerca de Nosotros", Toast.LENGTH_SHORT).show()
+
+                // Navegar a la interfaz de Acerca de Nosotros
+                val intent = Intent(this, AcercaNosotrosActivity::class.java)
+                startActivity(intent)
+            }
+
+            R.id.nav_item_seis -> {
+                // Mostrar Toast
+                Toast.makeText(this, "Salir", Toast.LENGTH_SHORT).show()
+
+                // Navegar a la interfaz de Salir
+                val intent = Intent(this, LoginActivity::class.java)
+                startActivity(intent)
+            }
+        }
+
+        drawer.closeDrawer(GravityCompat.START)
+        return true
+    }
+
+    override fun onPostCreate(savedInstanceState: Bundle?) {
+        super.onPostCreate(savedInstanceState)
+        toggle.syncState()
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        toggle.onConfigurationChanged(newConfig)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if(toggle.onOptionsItemSelected(item)) {
+            return true
+        }
+        return super.onOptionsItemSelected(item)
+    }
+}

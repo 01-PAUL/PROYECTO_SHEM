@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Traslación de la vista -->
+    <translate
+        android:fromXDelta="0%"
+        android:fromYDelta="-30%"
+        android:toXDelta="0%"
+        android:toYDelta="0%"
+        android:duration="2000" />
+
+    <!-- Cambia la opacidad de 0.1 a 1.0 (transparente a opaco) -->
+    <alpha
+        android:fromAlpha="0.1"
+        android:toAlpha="1.0"
+        android:duration="2000" />
+
+    <!-- Escala el tamaño desde 0.5 (mitad de su tamaño) hasta su tamaño completo -->
+    <scale
+        android:fromXScale="0.5"
+        android:toXScale="1.0"
+        android:fromYScale="0.5"
+        android:toYScale="1.0"
+        android:pivotX="50%"
+    android:pivotY="50%"
+    android:duration="2000" />
+
+</set>

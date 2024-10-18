@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Título -->
+    <TextView
+        android:id="@+id/tv_titulo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:paddingBottom="16dp"
+        android:text="CONSULTA DE SALIDA DE USUARIO"
+        android:textAlignment="center"
+        android:textSize="28sp"
+        android:paddingTop="20dp"
+        android:textStyle="bold" />
+
+    <!-- Layout horizontal para los campos de texto con etiquetas arriba -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginBottom="16dp">
+
+        <!-- Layout vertical para el Código de Usuario -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginEnd="8dp">
+
+            <!-- Etiqueta para Código de Usuario -->
+            <TextView
+                android:id="@+id/tv_cod_usuario"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="COD USUARIO"
+                android:textStyle="bold"
+                android:paddingBottom="4dp" />
+
+            <!-- Campo de Código de Usuario -->
+            <EditText
+                android:id="@+id/et_cod_usuario"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Ingrese código"
+                android:inputType="text"
+                android:padding="8dp"
+                android:background="@android:drawable/edit_text" />
+        </LinearLayout>
+
+        <!-- Layout vertical para el Nombre de Usuario -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <!-- Etiqueta para Nombre de Usuario -->
+            <TextView
+                android:id="@+id/tv_nombre_usuario"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="NOMBRE DEL USUARIO"
+                android:textStyle="bold"
+                android:paddingBottom="4dp" />
+
+            <!-- Campo de Nombre de Usuario -->
+            <EditText
+                android:id="@+id/et_nombre_usuario"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Ingrese nombre"
+                android:inputType="text"
+                android:padding="8dp"
+                android:background="@android:drawable/edit_text" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Botones Consultar y Regresar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginBottom="16dp">
+
+        <Button
+            android:id="@+id/btn_consultar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="CONSULTAR"
+            android:layout_marginEnd="8dp"
+            android:backgroundTint="#033657"/>
+
+        <Button
+            android:id="@+id/btnRegresar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:backgroundTint="#033657"
+            android:text="REGRESAR" />
+    </LinearLayout>
+
+    <!-- Cuadro de Resultado -->
+    <TextView
+        android:id="@+id/tvResultado"
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
+        android:layout_marginBottom="4dp"
+        android:background="@drawable/border"
+        android:text=""
+        android:gravity="start|top"/>
+
+</androidx.appcompat.widget.LinearLayoutCompat>
