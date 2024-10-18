@@ -11,20 +11,19 @@
         android:id="@+id/circle6"
         android:layout_width="87dp"
         android:layout_height="96dp"
-        android:layout_marginStart="352dp"
+        android:layout_marginStart="296dp"
         android:src="@drawable/circle_image"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
         android:id="@+id/logoImageView"
-        android:layout_width="410dp"
-        android:layout_height="249dp"
+        android:layout_width="439dp"
+        android:layout_height="245dp"
         android:background="@drawable/circle_image"
         android:scaleType="centerCrop"
         android:src="@drawable/logo_inicio"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -75,7 +74,8 @@
         android:layout_marginEnd="32dp"
         android:text="Iniciar sesión"
         android:textAllCaps="false"
-        android:textColor="@android:color/white"
+        android:textColor="@color/white"
+        android:backgroundTint="#033657"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/olvideContrasenaTextView" />
@@ -111,8 +111,8 @@
         android:id="@+id/circle3"
         android:layout_width="25dp"
         android:layout_height="25dp"
-        android:layout_marginEnd="52dp"
-        android:layout_marginBottom="128dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="124dp"
         android:src="@drawable/circle_image"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -122,7 +122,7 @@
         android:layout_width="37dp"
         android:layout_height="33dp"
         android:layout_marginEnd="340dp"
-        android:layout_marginBottom="96dp"
+        android:layout_marginBottom="104dp"
         android:src="@drawable/circle_image"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -131,8 +131,8 @@
         android:id="@+id/circle5"
         android:layout_width="34dp"
         android:layout_height="40dp"
-        android:layout_marginEnd="188dp"
-        android:layout_marginBottom="32dp"
+        android:layout_marginEnd="244dp"
+        android:layout_marginBottom="28dp"
         android:src="@drawable/circle_image"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />

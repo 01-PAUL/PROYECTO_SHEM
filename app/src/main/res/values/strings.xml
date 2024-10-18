@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Proyecto_SHEM</string>
+    <string name="app_name">SHEM</string>
     <string name="navigation_drawer_oper">Open</string>
     <string name="navigation_drawer_close">Close</string>
 </resources>
