@@ -111,12 +111,10 @@
         android:padding="1dp"
         android:layout_marginBottom="4dp" />
 
-    <EditText
-        android:id="@+id/etMicromovilidad"
+    <Spinner
+        android:id="@+id/spinnerMicromovilidad"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:hint="Ingrese el tipo de movilidad"
-        android:layout_marginBottom="1dp"/>
+        android:layout_height="48dp" />
 
     <!-- Botones Registrar y Regresar en horizontal -->
     <androidx.appcompat.widget.LinearLayoutCompat
