@@ -2,17 +2,17 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FEFEFE"
-    tools:context=".LoginActivity">
+    tools:context=".RecuperarContrasenaActivity">
 
     <ImageView
         android:id="@+id/circle6"
         android:layout_width="87dp"
-        android:layout_height="96dp"
-        android:layout_marginStart="324dp"
-        android:layout_marginBottom="4dp"
+        android:layout_height="84dp"
+        android:layout_marginStart="336dp"
         android:src="@drawable/circle_image"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -30,13 +30,15 @@
 
     <TextView
         android:id="@+id/bienvenidoTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="338dp"
+        android:layout_height="86dp"
         android:layout_marginTop="52dp"
-        android:text="¡Bienvenido!"
-        android:textSize="28sp"
+        android:text="Recuperar Contraseña"
+        android:textAlignment="center"
+        android:textSize="38sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.457"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/logoImageView" />
 
@@ -45,43 +47,30 @@
         android:layout_width="371dp"
         android:layout_height="58dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="32dp"
         android:hint="Ingrese su correo"
         android:padding="12dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.416"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/bienvenidoTextView" />
 
-    <TextView
-        android:id="@+id/olvidasteContrasena"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:backgroundTint="#000000"
-        android:text="¿Olvidaste tu contraseña?"
-        android:textColor="@color/blue"
-        android:textSize="15sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/txtClave" />
-
     <Button
-        android:id="@+id/btnLogin"
-        android:layout_width="375dp"
-        android:layout_height="51dp"
+        android:id="@+id/btnRecuperar"
+        android:layout_width="368dp"
+        android:layout_height="53dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
         android:backgroundTint="#033657"
-        android:text="Iniciar sesión"
+        android:text="Enviar"
         android:textAllCaps="false"
         android:textColor="@color/white"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.571"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/olvidasteContrasena" />
+        app:layout_constraintTop_toBottomOf="@+id/txtLogin" />
 
     <TextView
         android:id="@+id/preparateAhoraTextView"
@@ -89,26 +78,12 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:text="PREPARATÉ PARA EL AHORA"
-        android:textColor="#359712"
+        android:textColor="#033657"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.504"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnLogin" />
-
-    <EditText
-        android:id="@+id/txtClave"
-        android:layout_width="371dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="32dp"
-        android:hint="Contraseña"
-        android:inputType="textPassword"
-        android:padding="12dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/txtLogin" />
+        app:layout_constraintTop_toBottomOf="@+id/btnRecuperar" />
 
     <ImageView
         android:id="@+id/circle3"
@@ -124,8 +99,8 @@
         android:id="@+id/circle4"
         android:layout_width="37dp"
         android:layout_height="33dp"
-        android:layout_marginEnd="340dp"
-        android:layout_marginBottom="104dp"
+        android:layout_marginEnd="332dp"
+        android:layout_marginBottom="116dp"
         android:src="@drawable/circle_image"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -148,5 +123,18 @@
         app:layout_constraintTop_toBottomOf="@+id/logoImageView"
         app:srcCompat="@drawable/barra" />
 
+    <TextView
+        android:id="@+id/atras"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="180dp"
+        android:layout_marginTop="42dp"
+        android:layout_marginEnd="180dp"
+        android:text="Atrás"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/preparateAhoraTextView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

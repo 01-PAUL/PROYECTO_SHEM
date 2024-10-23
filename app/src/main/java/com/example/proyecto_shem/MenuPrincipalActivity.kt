@@ -25,6 +25,20 @@ class MenuPrincipalActivity : AppCompatActivity(), NavigationView.OnNavigationIt
         val toolbar: Toolbar = findViewById(R.id.toolbar_main)
         setSupportActionBar(toolbar)
 
+        // Obtener el email del Intent
+        val userEmail = intent.getStringExtra("user_email")
+
+        // Cambiar el título o mensaje de bienvenida según el correo
+        if (userEmail != null) {
+            when (userEmail) {
+                "i202030272@cibertec.edu.pe" -> supportActionBar?.title = "SUPERVISOR"
+                "i202030261@cibertec.edu.pe",
+                "i202030257@cibertec.edu.pe",
+                "i202030288@cibertec.edu.pe" -> supportActionBar?.title = "PERSONAL DE SEGURIDAD"
+                else -> supportActionBar?.title = "BIENVENIDO AL SISTEMA"
+            }
+        }
+
         drawer = findViewById(R.id.drawer_layout)
 
         toggle = ActionBarDrawerToggle(
@@ -107,7 +121,9 @@ class MenuPrincipalActivity : AppCompatActivity(), NavigationView.OnNavigationIt
 
                 // Navegar a la interfaz de Salir
                 val intent = Intent(this, LoginActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
+                finish()
             }
         }
 

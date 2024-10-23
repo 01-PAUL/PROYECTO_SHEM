@@ -1,8 +1,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.Proyecto_SHEM" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="android:statusBarColor">#033F6B</item> <!-- Color de la barra de estado -->
+        <item name="android:windowLightStatusBar">true</item> <!-- Esto permite que los iconos en la barra de estado sean oscuros (útil si usas un color claro para la barra). -->
     </style>
 
     <style name="Theme.Proyecto_SHEM" parent="Base.Theme.Proyecto_SHEM" >

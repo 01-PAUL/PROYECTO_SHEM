@@ -32,7 +32,5 @@ public class InicioActivity extends AppCompatActivity {
                 finish();
             }
         },3000);
-
-
     }
 }
