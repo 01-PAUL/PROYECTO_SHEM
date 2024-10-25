@@ -1,4 +1,4 @@
-package com.example.proyecto_shem;
+package com.example.proyecto_shem.vista;
 
 import android.content.Intent
 import android.content.res.Configuration
@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import com.example.proyecto_shem.R
 import com.google.android.material.navigation.NavigationView
 
 class MenuPrincipalActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {

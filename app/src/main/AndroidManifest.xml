@@ -14,32 +14,32 @@
         android:theme="@style/Theme.Proyecto_SHEM"
         tools:targetApi="31">
         <activity
-            android:name=".RecuperarContrasenaActivity"
+            android:name=".vista.RecuperarContrasenaActivity"
             android:exported="false" />
         <activity
-            android:name=".MenuPrincipalActivity"
+            android:name=".vista.MenuPrincipalActivity"
             android:exported="false" />
         <activity
-            android:name=".AcercaNosotrosActivity"
+            android:name=".vista.AcercaNosotrosActivity"
             android:exported="false" />
         <activity
-            android:name=".RegistroSalidaActivity"
+            android:name=".vista.RegistroSalidaActivity"
             android:exported="false" />
         <activity
-            android:name=".RegistroIngresoActivity"
+            android:name=".vista.RegistroIngresoActivity"
             android:exported="false" />
         <activity
-            android:name=".RegistroPermisoActivity"
+            android:name=".vista.RegistroPermisoActivity"
             android:exported="false" />
         <activity
-            android:name=".ConsultaSalidaActivity"
+            android:name=".vista.ConsultaSalidaActivity"
             android:exported="false" />
         <activity
-            android:name=".ConsultaIngresoActivity"
+            android:name=".vista.ConsultaIngresoActivity"
             android:exported="false" />
         <activity android:name=".MainActivity" />
         <activity
-            android:name=".InicioActivity"
+            android:name=".vista.InicioActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -47,7 +47,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".LoginActivity" />
+        <activity android:name=".vista.LoginActivity" />
     </application>
 
 </manifest>

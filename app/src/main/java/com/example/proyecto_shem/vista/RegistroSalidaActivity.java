@@ -1,21 +1,19 @@
-package com.example.proyecto_shem;
-
-import android.os.Bundle;
+package com.example.proyecto_shem.vista;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.proyecto_shem.R;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
-public class RegistroIngresoActivity extends AppCompatActivity {
+public class RegistroSalidaActivity extends AppCompatActivity {
 
     Button btnEscanearQR, btnRegresar;
     TextView txtResultado;
@@ -23,7 +21,7 @@ public class RegistroIngresoActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_registro_ingreso);
+        setContentView(R.layout.activity_registro_salida);
 
         btnEscanearQR = findViewById(R.id.btnEscanearQR);
         txtResultado = findViewById(R.id.txtResultado);
@@ -35,14 +33,13 @@ public class RegistroIngresoActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                IntentIntegrator integrador = new IntentIntegrator(RegistroIngresoActivity.this);
+                IntentIntegrator integrador = new IntentIntegrator(RegistroSalidaActivity.this);
                 integrador.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
                 integrador.setPrompt("lector - CDP");
                 integrador.setCameraId(0);
                 integrador.setBeepEnabled(true);
                 integrador.setBarcodeImageEnabled(true);
                 integrador.initiateScan();
-
             }
         });
 

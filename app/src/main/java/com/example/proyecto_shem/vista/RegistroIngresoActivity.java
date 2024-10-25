@@ -1,22 +1,20 @@
-package com.example.proyecto_shem;
+package com.example.proyecto_shem.vista;
+
+import android.os.Bundle;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
+import com.example.proyecto_shem.R;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
-public class RegistroSalidaActivity extends AppCompatActivity {
+public class RegistroIngresoActivity extends AppCompatActivity {
 
     Button btnEscanearQR, btnRegresar;
     TextView txtResultado;
@@ -24,10 +22,10 @@ public class RegistroSalidaActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_registro_salida);
+        setContentView(R.layout.activity_registro_ingreso);
 
         btnEscanearQR = findViewById(R.id.btnEscanearQR);
-        txtResultado = findViewById(R.id.txtResultado);
+        txtResultado = findViewById(R.id.txtUsuario);
 
         // Inicializamos el botón Regresar
         btnRegresar = findViewById(R.id.btnRegresar);
@@ -36,13 +34,14 @@ public class RegistroSalidaActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                IntentIntegrator integrador = new IntentIntegrator(RegistroSalidaActivity.this);
+                IntentIntegrator integrador = new IntentIntegrator(RegistroIngresoActivity.this);
                 integrador.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
                 integrador.setPrompt("lector - CDP");
                 integrador.setCameraId(0);
                 integrador.setBeepEnabled(true);
                 integrador.setBarcodeImageEnabled(true);
                 integrador.initiateScan();
+
             }
         });
 

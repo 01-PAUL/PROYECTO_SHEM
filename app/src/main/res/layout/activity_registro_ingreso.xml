@@ -13,7 +13,7 @@
         android:id="@+id/tvTitulo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="30dp"
         android:gravity="center"
         android:text="Registro de ingreso de usuario"
         android:textColor="@android:color/black"
@@ -26,7 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginBottom="16dp">
+        android:layout_marginBottom="35dp">
 
         <!-- Tipo de Usuario Label and Spinner -->
         <LinearLayout
@@ -80,7 +80,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginBottom="16dp">
+        android:layout_marginBottom="35dp">
 
         <!-- Tipo de Documento Label and Spinner -->
         <LinearLayout
@@ -134,7 +134,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginBottom="16dp">
+        android:layout_marginBottom="35dp">
 
         <!-- Botón Escanear QR -->
         <Button
@@ -157,16 +157,66 @@
             android:textColor="@android:color/white"
             android:backgroundTint="#033657" />
     </androidx.appcompat.widget.LinearLayoutCompat>
-
-    <!-- Área de resultado (cuadro en gris oscuro) -->
-    <TextView
-        android:id="@+id/txtResultado"
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
-        android:layout_height="265dp"
-        android:layout_marginBottom="16dp"
-        android:background="@drawable/border"
-        android:text=""
-        android:gravity="start|top" />
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="30dp">
+
+        <!-- Usuario y Autorización (Columna Izquierda) -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <!-- Usuario -->
+            <TextView
+                android:id="@+id/tvUsuario"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Usuario:"
+                android:textSize="14sp"
+                android:textColor="@android:color/black" />
+
+            <TextView
+                android:id="@+id/txtUsuario"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginBottom="18dp"
+                android:background="@drawable/border"
+                android:text=""
+                android:gravity="start|top" />
+
+            <!-- Autorización -->
+            <TextView
+                android:id="@+id/tvAutorizacion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Autorización:"
+                android:textSize="14sp"
+                android:textColor="@android:color/black" />
+
+            <TextView
+                android:id="@+id/txtR"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/border"
+                android:text=""
+                android:gravity="start|top" />
+        </LinearLayout>
+
+        <!-- ImageView al costado -->
+        <ImageView
+            android:id="@+id/imgView"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="16dp"
+            android:src="@drawable/ic_launcher_foreground"
+            android:contentDescription="Imagen del usuario" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
     <!-- Campo de Micromovilidad -->
     <TextView
@@ -188,7 +238,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="16dp">
+        android:layout_marginTop="35dp">
 
         <!-- Botón Ingreso -->
         <Button

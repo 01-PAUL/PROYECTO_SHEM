@@ -1,4 +1,4 @@
-package com.example.proyecto_shem;
+package com.example.proyecto_shem.vista;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +9,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.proyecto_shem.R;
 
 public class InicioActivity extends AppCompatActivity {
 

@@ -13,12 +13,12 @@
         android:id="@+id/tvTitulo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="48dp"
         android:gravity="center"
         android:text="Registro de salida de usuario"
         android:textColor="@android:color/black"
         android:textSize="30sp"
-        android:paddingTop="20dp"
+        android:paddingTop="15dp"
         android:textStyle="bold" />
 
     <!-- Primera fila: Tipo de Usuario y Código de Usuario -->
@@ -26,7 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginBottom="16dp">
+        android:layout_marginBottom="46dp">
 
         <!-- Tipo de Usuario Label and Spinner -->
         <LinearLayout
@@ -46,7 +46,7 @@
             <Spinner
                 android:id="@+id/spinnerTipoUsuario"
                 android:layout_width="match_parent"
-                android:layout_height="48dp" />
+                android:layout_height="48dp"/>
         </LinearLayout>
 
         <!-- Código de Usuario Label and Input -->
@@ -80,7 +80,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginBottom="16dp">
+        android:layout_marginBottom="45dp">
 
         <!-- Tipo de Documento Label and Spinner -->
         <LinearLayout
@@ -134,13 +134,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginBottom="16dp">
+        android:layout_marginBottom="48dp">
 
         <!-- Botón Escanear QR -->
         <Button
             android:id="@+id/btnEscanearQR"
             android:layout_width="0dp"
-            android:layout_height="48dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="ESCANEAR QR"
             android:textColor="@android:color/white"
@@ -150,30 +150,80 @@
         <Button
             android:id="@+id/btnConsultar"
             android:layout_width="0dp"
-            android:layout_height="48dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginStart="8dp"
             android:text="CONSULTAR"
             android:textColor="@android:color/white"
             android:backgroundTint="#033657" />
     </androidx.appcompat.widget.LinearLayoutCompat>
-
-    <!-- Área de resultado (cuadro en gris oscuro) -->
-    <TextView
-        android:id="@+id/txtResultado"
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
-        android:layout_height="325dp"
-        android:layout_marginBottom="16dp"
-        android:background="@drawable/border"
-        android:text=""
-        android:gravity="start|top"/>
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="45dp">
+
+        <!-- Usuario y Autorización (Columna Izquierda) -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <!-- Usuario -->
+            <TextView
+                android:id="@+id/tvUsuario"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Usuario:"
+                android:textSize="14sp"
+                android:textColor="@android:color/black" />
+
+            <TextView
+                android:id="@+id/txtUsuario"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginBottom="38dp"
+                android:background="@drawable/border"
+                android:text=""
+                android:gravity="start|top" />
+
+            <!-- Autorización -->
+            <TextView
+                android:id="@+id/tvMovilidad"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Movilidad:"
+                android:textSize="14sp"
+                android:textColor="@android:color/black" />
+
+            <TextView
+                android:id="@+id/txtMovilidad"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/border"
+                android:text=""
+                android:gravity="start|top" />
+        </LinearLayout>
+
+        <!-- ImageView al costado -->
+        <ImageView
+            android:id="@+id/imgView"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="16dp"
+            android:src="@drawable/ic_launcher_foreground"
+            android:contentDescription="Imagen del usuario" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
     <!-- Botones Ingreso y Regresar -->
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="16dp">
+        android:layout_marginTop="10dp">
 
         <!-- Botón Ingreso -->
         <Button
@@ -181,9 +231,9 @@
             android:layout_width="0dp"
             android:layout_height="48dp"
             android:layout_weight="1"
-            android:backgroundTint="#033657"
             android:text="SALIDA"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/white"
+            android:backgroundTint="#033657" />
 
         <!-- Botón Regresar -->
         <Button

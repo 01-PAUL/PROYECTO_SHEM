@@ -1,4 +1,4 @@
-package com.example.proyecto_shem;
+package com.example.proyecto_shem.vista;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,14 +11,17 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-public class ConsultaIngresoActivity extends AppCompatActivity {
+import com.example.proyecto_shem.R;
+
+public class AcercaNosotrosActivity extends AppCompatActivity {
 
     Button btnRegresar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_consulta_ingreso);
+        EdgeToEdge.enable(this);
+        setContentView(R.layout.activity_acerca_nosotros);
 
         // Inicializamos el botón Regresar
         btnRegresar = findViewById(R.id.btnRegresar);
@@ -31,6 +34,5 @@ public class ConsultaIngresoActivity extends AppCompatActivity {
                 finish();
             }
         });
-
     }
 }
