@@ -47,7 +47,7 @@
 
             <!-- Campo de Código de Usuario -->
             <EditText
-                android:id="@+id/et_cod_usuario"
+                android:id="@+id/txtCodUsuario"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Ingrese código"
@@ -74,7 +74,7 @@
 
             <!-- Campo de Nombre de Usuario -->
             <EditText
-                android:id="@+id/et_nombre_usuario"
+                android:id="@+id/txtNombreUsuario"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Ingrese nombre"
@@ -94,7 +94,7 @@
         android:layout_marginBottom="16dp">
 
         <Button
-            android:id="@+id/btn_consultar"
+            android:id="@+id/btnConsultar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"

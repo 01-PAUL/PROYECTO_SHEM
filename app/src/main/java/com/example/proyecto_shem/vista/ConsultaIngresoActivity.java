@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,15 +16,18 @@ import com.example.proyecto_shem.R;
 
 public class ConsultaIngresoActivity extends AppCompatActivity {
 
-    Button btnRegresar;
+    EditText txtCodUsuario, txtNombreUsuario;
+    Button btnConsultar, btnRegresar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_consulta_ingreso);
 
-        // Inicializamos el botón Regresar
+        btnConsultar = findViewById(R.id.btnConsultar);
         btnRegresar = findViewById(R.id.btnRegresar);
+        txtCodUsuario = findViewById(R.id.txtCodUsuario);
+        txtNombreUsuario = findViewById(R.id.txtNombreUsuario);
 
         // Acción al presionar el botón Regresar
         btnRegresar.setOnClickListener(new View.OnClickListener() {

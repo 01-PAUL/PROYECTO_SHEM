@@ -23,14 +23,6 @@ public class RecuperarContrasenaActivity extends AppCompatActivity {
     EditText txtLogin;
     TextView atras;
 
-    // Lista de correos permitidos
-    String[] correosPermitidos = {
-            "i202030272@cibertec.edu.pe",
-            "i202030261@cibertec.edu.pe",
-            "i202030257@cibertec.edu.pe",
-            "i202030288@cibertec.edu.pe"
-    };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,25 +53,11 @@ public class RecuperarContrasenaActivity extends AppCompatActivity {
         String email = txtLogin.getText().toString().trim();
 
         if (email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            btnRecuperar.setError("Correo Invalido");
+            txtLogin.setError("Correo inválido");
             return;
         }
 
-        // Validar si el correo ingresado está en la lista de correos permitidos
-        boolean correoValido = false;
-        for (String correo : correosPermitidos) {
-            if (correo.equals(email)) {
-                correoValido = true;
-                break;
-            }
-        }
-
-        if (!correoValido) {
-            Toast.makeText(RecuperarContrasenaActivity.this, "Correo no registrado", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        // Si el correo es válido, proceder a enviar el correo
+        // Procede a enviar el correo si la validación básica fue exitosa
         sendEmail(email);
     }
 
@@ -94,9 +72,8 @@ public class RecuperarContrasenaActivity extends AppCompatActivity {
 
     public void sendEmail(String email) {
         FirebaseAuth auth = FirebaseAuth.getInstance();
-        String emailAdress = email;
 
-        auth.sendPasswordResetEmail(emailAdress)
+        auth.sendPasswordResetEmail(email)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {

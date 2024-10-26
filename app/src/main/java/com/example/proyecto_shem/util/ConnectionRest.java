@@ -7,7 +7,7 @@ public class ConnectionRest {
 
     private static Retrofit retrofit ;
 
-    private static final String URL = "https://proyectoshem-production-3c24.up.railway.app/";
+    private static final String URL = "";
 
     public static Retrofit getConnection(){
         if (retrofit == null){

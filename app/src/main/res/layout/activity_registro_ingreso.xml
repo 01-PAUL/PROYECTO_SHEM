@@ -66,7 +66,7 @@
                 android:textColor="@android:color/black" />
 
             <EditText
-                android:id="@+id/etCodigoUsuario"
+                android:id="@+id/txtCodigoUsuario"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:hint="Ingrese código"
@@ -120,7 +120,7 @@
                 android:textColor="@android:color/black" />
 
             <EditText
-                android:id="@+id/etNumeroDocumento"
+                android:id="@+id/txtNumeroDocumento"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:hint="Ingrese aquí"
@@ -177,16 +177,16 @@
                 android:layout_height="wrap_content"
                 android:text="Usuario:"
                 android:textSize="14sp"
-                android:textColor="@android:color/black" />
+                android:textColor="@android:color/black"
+                android:labelFor="@id/txtUsuario" />
 
-            <TextView
+            <EditText
                 android:id="@+id/txtUsuario"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginBottom="18dp"
-                android:background="@drawable/border"
-                android:text=""
-                android:gravity="start|top" />
+                android:layout_height="48dp"
+                android:inputType="none"
+                android:focusable="false"
+                android:clickable="false" />
 
             <!-- Autorización -->
             <TextView
@@ -195,16 +195,16 @@
                 android:layout_height="wrap_content"
                 android:text="Autorización:"
                 android:textSize="14sp"
-                android:textColor="@android:color/black" />
+                android:textColor="@android:color/black"
+                android:labelFor="@id/txtAutorizacion"/>
 
-            <TextView
-                android:id="@+id/txtR"
+            <EditText
+                android:id="@+id/txtAutorizacion"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginBottom="16dp"
-                android:background="@drawable/border"
-                android:text=""
-                android:gravity="start|top" />
+                android:layout_height="48dp"
+                android:inputType="none"
+                android:focusable="false"
+                android:clickable="false" />
         </LinearLayout>
 
         <!-- ImageView al costado -->
