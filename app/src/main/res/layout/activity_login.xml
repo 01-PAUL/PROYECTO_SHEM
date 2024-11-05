@@ -111,6 +111,16 @@
         app:layout_constraintTop_toBottomOf="@id/txtLogin" />
 
     <ImageView
+        android:id="@+id/eyeIcon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginTop="13dp"
+        android:layout_marginEnd="6dp"
+        android:src="@drawable/ic_eye_closed"
+        app:layout_constraintEnd_toEndOf="@+id/txtClave"
+        app:layout_constraintTop_toTopOf="@+id/txtClave" />
+
+    <ImageView
         android:id="@+id/circle3"
         android:layout_width="25dp"
         android:layout_height="25dp"

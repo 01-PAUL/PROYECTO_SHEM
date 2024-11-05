@@ -20,18 +20,6 @@ public class Ingreso implements Serializable {
     private String horaIngreso;
     private TipoMicromovilidad tipoMicromovilidad;
 
-    // Constructor vacío
-    public Ingreso() {
-        this.fechaIngreso = new Date();  // Asigna la fecha actual
-
-        // Verifica si la versión de Android es al menos API 26
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            this.horaIngreso = LocalTime.now().toString();  // Asigna la hora local si el SDK es >= 26
-        } else {
-            this.horaIngreso = new Date().toString();  // Usa una alternativa para versiones anteriores
-        }
-    }
-
     // Getters y setters
     public int getIdIngreso() {
         return idIngreso;

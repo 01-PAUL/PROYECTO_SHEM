@@ -63,8 +63,6 @@ class MenuPrincipalActivity : AppCompatActivity(), NavigationView.OnNavigationIt
         when (item.itemId) {
             R.id.nav_item_uno -> Toast.makeText(this, "Inicio", Toast.LENGTH_SHORT).show()
             R.id.nav_item_dos_uno -> {
-                // Mostrar Toast
-                Toast.makeText(this, "Ingreso", Toast.LENGTH_SHORT).show()
 
                 // Navegar a la interfaz de Ingreso
                 val intent = Intent(this, RegistroIngresoActivity::class.java)
@@ -72,8 +70,6 @@ class MenuPrincipalActivity : AppCompatActivity(), NavigationView.OnNavigationIt
             }
 
             R.id.nav_item_dos_dos -> {
-                // Mostrar Toast
-                Toast.makeText(this, "Salida", Toast.LENGTH_SHORT).show()
 
                 // Navegar a la interfaz de Salida
                 val intent = Intent(this, RegistroSalidaActivity::class.java)
@@ -81,17 +77,20 @@ class MenuPrincipalActivity : AppCompatActivity(), NavigationView.OnNavigationIt
             }
 
             R.id.nav_item_tres -> {
-                // Mostrar Toast
-                Toast.makeText(this, "Permisos", Toast.LENGTH_SHORT).show()
 
                 // Navegar a la interfaz de Permisos
                 val intent = Intent(this, RegistroPermisoActivity::class.java)
                 startActivity(intent)
             }
 
+            R.id.nav_item_cuatro -> {
+
+                // Navegar a la interfaz de Permisos Salida
+                val intent = Intent(this, RegistroPermisoSalidaActivity::class.java)
+                startActivity(intent)
+            }
+
             R.id.nav_item_cuatro_uno -> {
-                // Mostrar Toast
-                Toast.makeText(this, "Ingreso", Toast.LENGTH_SHORT).show()
 
                 // Navegar a la interfaz de Ingreso
                 val intent = Intent(this, ConsultaIngresoActivity::class.java)
@@ -99,8 +98,6 @@ class MenuPrincipalActivity : AppCompatActivity(), NavigationView.OnNavigationIt
             }
 
             R.id.nav_item_cuatro_dos -> {
-                // Mostrar Toast
-                Toast.makeText(this, "Salida", Toast.LENGTH_SHORT).show()
 
                 // Navegar a la interfaz de Salida
                 val intent = Intent(this, ConsultaSalidaActivity::class.java)
@@ -108,8 +105,6 @@ class MenuPrincipalActivity : AppCompatActivity(), NavigationView.OnNavigationIt
             }
 
             R.id.nav_item_cinco -> {
-                // Mostrar Toast
-                Toast.makeText(this, "Acerca de Nosotros", Toast.LENGTH_SHORT).show()
 
                 // Navegar a la interfaz de Acerca de Nosotros
                 val intent = Intent(this, AcercaNosotrosActivity::class.java)
@@ -117,8 +112,6 @@ class MenuPrincipalActivity : AppCompatActivity(), NavigationView.OnNavigationIt
             }
 
             R.id.nav_item_seis -> {
-                // Mostrar Toast
-                Toast.makeText(this, "Salir", Toast.LENGTH_SHORT).show()
 
                 // Navegar a la interfaz de Salir
                 val intent = Intent(this, LoginActivity::class.java)

@@ -13,7 +13,7 @@
         android:id="@+id/tvTitulo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="48dp"
+        android:layout_marginBottom="50dp"
         android:gravity="center"
         android:text="Registro de salida de usuario"
         android:textColor="@android:color/black"
@@ -26,7 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginBottom="46dp">
+        android:layout_marginBottom="48dp">
 
         <!-- Tipo de Usuario Label and Spinner -->
         <LinearLayout
@@ -134,7 +134,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginBottom="48dp">
+        android:layout_marginBottom="50dp">
 
         <!-- Botón Escanear QR -->
         <Button
@@ -186,7 +186,8 @@
                 android:layout_height="48dp"
                 android:inputType="none"
                 android:focusable="false"
-                android:clickable="false" />
+                android:clickable="false"
+                android:layout_marginBottom="20dp"/>
 
             <!-- Autorización -->
             <TextView

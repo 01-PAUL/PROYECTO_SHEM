@@ -23,7 +23,10 @@
         <menu>
             <item android:id="@+id/nav_item_tres"
                 android:icon="@drawable/permisos"
-                android:title="Permisos"/>
+                android:title="Ingreso"/>
+            <item android:id="@+id/nav_item_cuatro"
+                android:icon="@drawable/permisos"
+                android:title="Salida"/>
         </menu>
     </item>
 

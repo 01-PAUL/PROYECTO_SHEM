@@ -11,12 +11,12 @@
         android:id="@+id/tvTitulo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="50dp"
         android:gravity="center"
-        android:paddingTop="20dp"
-        android:text="Registro de permiso de usuario"
+        android:paddingTop="30dp"
+        android:text="Registro de salida de usuario"
         android:textColor="@android:color/black"
-        android:textSize="28sp"
+        android:textSize="29sp"
         android:textStyle="bold" />
 
     <!-- Contenedor para tipo de documento y número de documento en horizontal -->
@@ -24,7 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginBottom="30dp">
+        android:layout_marginBottom="50dp">
 
         <!-- Tipo de documento Label -->
         <LinearLayout
@@ -37,8 +37,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Tipo de Documento:"
-                android:textSize="14sp"
-                android:textColor="@android:color/black" />
+                android:textSize="16sp"
+                android:textColor="@android:color/black"
+                android:layout_marginBottom="2dp"/>
 
             <!-- Spinner para tipo de documento -->
             <Spinner
@@ -81,13 +82,13 @@
         android:text="CONSULTAR"
         android:textColor="@android:color/white"
         android:backgroundTint="#033657"
-        android:layout_marginBottom="30dp" />
+        android:layout_marginBottom="50dp" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginBottom="30dp">
+        android:layout_marginBottom="50dp">
 
         <!-- Usuario y Autorización (Columna Izquierda) -->
         <LinearLayout
@@ -112,42 +113,44 @@
                 android:layout_height="48dp"
                 android:inputType="none"
                 android:focusable="false"
-                android:clickable="false" />
+                android:clickable="false"
+                android:layout_marginBottom="28dp"/>
 
-            <!-- Autorización -->
+
             <TextView
-                android:id="@+id/tvGenero"
+                android:id="@+id/tvDetallePermiso"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Género:"
+                android:text="Detalle de Permiso:"
                 android:textSize="14sp"
                 android:textColor="@android:color/black"
-                android:labelFor="@id/txtGenero"/>
+                android:labelFor="@id/txtDetalle"/>
 
             <EditText
-                android:id="@+id/txtGenero"
+                android:id="@+id/txtDetalle"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:inputType="none"
                 android:focusable="false"
-                android:clickable="false" />
+                android:clickable="false"
+                android:layout_marginBottom="28dp"/>
 
             <TextView
-                android:id="@+id/tvFechNacim"
+                android:id="@+id/tvMicromovilidad"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Fecha Nacimiento:"
+                android:text="Micromovilidad:"
                 android:textSize="14sp"
                 android:textColor="@android:color/black"
-                android:labelFor="@id/txtFechNacim"/>
+                android:labelFor="@id/txtMicromovilidad"/>
 
             <EditText
-                android:id="@+id/txtFechNacim"
+                android:id="@+id/txtMicromovilidad"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:inputType="none"
                 android:focusable="false"
-                android:clickable="false" />
+                android:clickable="false"/>
         </LinearLayout>
 
         <!-- ImageView al costado -->
@@ -160,40 +163,6 @@
             android:src="@drawable/ic_launcher_foreground"
             android:contentDescription="Imagen del usuario" />
     </androidx.appcompat.widget.LinearLayoutCompat>
-
-    <!-- Detalle de Permiso Label -->
-    <TextView
-        android:id="@+id/tvDetallePermiso"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Detalle de Permiso:"
-        android:textSize="16sp"
-        android:textColor="@android:color/black"
-        android:paddingTop="10dp"
-        android:layout_marginBottom="4dp" />
-
-    <EditText
-        android:id="@+id/txtDetalle"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:hint="Ingrese el detalle de permiso"
-        android:layout_marginBottom="10dp"/>
-
-    <TextView
-        android:id="@+id/tvMicromovilidad"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Micromovilidad:"
-        android:textSize="16sp"
-        android:textColor="@android:color/black"
-        android:padding="1dp"
-        android:layout_marginBottom="4dp" />
-
-    <Spinner
-        android:id="@+id/spinnerMicromovilidad"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_marginBottom="15dp"/>
 
     <!-- Botones Registrar y Regresar en horizontal -->
     <androidx.appcompat.widget.LinearLayoutCompat

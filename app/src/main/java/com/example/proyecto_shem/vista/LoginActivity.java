@@ -2,10 +2,12 @@ package com.example.proyecto_shem.vista;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,8 +26,10 @@ public class LoginActivity extends AppCompatActivity {
     TextView olvidasteContrasena;
     Button btnLogin;
     EditText txtLogin, txtClave;
+    ImageView eyeIcon;
     FirebaseAuth mAuth;
     FirebaseFirestore mFirestore;
+    boolean isPasswordVisible = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,10 +40,30 @@ public class LoginActivity extends AppCompatActivity {
         txtClave = findViewById(R.id.txtClave);
         btnLogin = findViewById(R.id.btnLogin);
         olvidasteContrasena = findViewById(R.id.olvidasteContrasena);
+        eyeIcon = findViewById(R.id.eyeIcon);
 
         mAuth = FirebaseAuth.getInstance();
         mFirestore = FirebaseFirestore.getInstance();
 
+        // Alternar visibilidad de contraseña
+        eyeIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isPasswordVisible) {
+                    // Cambiar a ocultar contraseña
+                    txtClave.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    eyeIcon.setImageResource(R.drawable.ic_eye_closed); // Cambia al icono de ojo cerrado
+                    isPasswordVisible = false;
+                } else {
+                    // Cambiar a mostrar contraseña
+                    txtClave.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                    eyeIcon.setImageResource(R.drawable.ic_eye_open); // Cambia al icono de ojo abierto
+                    isPasswordVisible = true;
+                }
+                // Mueve el cursor al final del texto
+                txtClave.setSelection(txtClave.length());
+            }
+        });
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
