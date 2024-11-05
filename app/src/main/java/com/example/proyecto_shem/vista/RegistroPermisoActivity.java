@@ -137,7 +137,7 @@ public class RegistroPermisoActivity extends AppCompatActivity {
         datosPermiso.put("fechaIngreso", fechaIngreso);
         datosPermiso.put("horaIngreso", horaIngreso);
 
-        databaseReference.child("Permiso").push().setValue(datosPermiso)
+        databaseReference.child("Permiso Ingreso").push().setValue(datosPermiso)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         showSuccessDialog(usuario, tipoMicromovilidad);

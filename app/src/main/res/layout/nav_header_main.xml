@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/nav_header"
     android:layout_width="match_parent"
     android:layout_height="160dp"
-    android:background="#033f6b"
+    android:background="#003B5D"
     android:clickable="true"
     android:focusable="true"
     android:foreground="?attr/selectableItemBackgroundBorderless"
