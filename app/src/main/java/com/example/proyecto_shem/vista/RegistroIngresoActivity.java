@@ -123,7 +123,7 @@ public class RegistroIngresoActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (validateInputs()) {
-                    String codigoUsuario = txtCodigoUsuario.getText().toString().toLowerCase(); // Convertir a minúsculas
+                    String codigoUsuario = txtCodigoUsuario.getText().toString();
 
                     // Verificar si el usuario ya existe en la tabla Ingreso
                     databaseReference.child("Ingreso")
@@ -175,7 +175,7 @@ public class RegistroIngresoActivity extends AppCompatActivity {
 
         Map<String, Object> datosIngreso = new HashMap<>();
         datosIngreso.put("tipoUsuario", tipoUsuario);
-        datosIngreso.put("codigoUsuario", codigoUsuario); // Guardar en minúsculas
+        datosIngreso.put("codigoUsuario", codigoUsuario);
         datosIngreso.put("tipoDocumento", tipoDocumento);
         datosIngreso.put("numeroDocumento", numeroDocumento);
         datosIngreso.put("usuario", usuario);

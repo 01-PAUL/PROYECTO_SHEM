@@ -31,12 +31,12 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RegistroPermisoSalidaActivity extends AppCompatActivity {
+    public class RegistroPermisoSalidaActivity extends AppCompatActivity {
 
-    TextView txtNumeroDocumento, txtUsuario, txtDetalle, txtMicromovilidad;
-    Spinner spinnerTipoDocumento;
-    Button btnConsultar, btnRegistrar, btnRegresar;
-    ImageView imgView;
+        TextView txtNumeroDocumento, txtUsuario, txtDetalle, txtMicromovilidad;
+        Spinner spinnerTipoDocumento;
+        Button btnConsultar, btnRegistrar, btnRegresar;
+        ImageView imgView;
 
     private DatabaseReference databaseReference;
     private Map<Integer, String> tipoDocumentoMap;
@@ -185,7 +185,7 @@ public class RegistroPermisoSalidaActivity extends AppCompatActivity {
 
     private void consultarNumDocumento(String numDocumento) {
         // Primero, intenta buscar en la tabla "estudiante"
-        databaseReference.child("Permiso").orderByChild("numDocumento").equalTo(numDocumento)
+        databaseReference.child("Permiso Ingreso").orderByChild("numDocumento").equalTo(numDocumento)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -252,7 +252,7 @@ public class RegistroPermisoSalidaActivity extends AppCompatActivity {
 
     // Función para obtener el dato de micromovilidad desde Firebase usando codigoUsuario
     private void fetchMicromovilidad(String numDocumento) {
-        DatabaseReference permisoRef = databaseReference.child("Permiso");
+        DatabaseReference permisoRef = databaseReference.child("Permiso Ingreso");
         permisoRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
