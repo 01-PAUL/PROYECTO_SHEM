@@ -14,10 +14,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:paddingBottom="16dp"
-        android:text="CONSULTAR INGRESO DE USUARIOS"
+        android:text="HSITORIAL DE INGRESO:"
         android:textAlignment="center"
         android:textSize="28sp"
-        android:paddingTop="20dp"
+        android:paddingTop="40dp"
         android:textStyle="bold" />
 
     <!-- Layout horizontal para los campos de texto con etiquetas arriba -->
@@ -40,31 +40,22 @@
                 android:id="@+id/tv_nombre_usuario"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="NOMBRE DEL USUARIO:"
+                android:text="SELECCIONE UNA FECHA:"
                 android:textStyle="bold"
                 android:paddingBottom="4dp" />
 
-
-
-            <!-- Campo de Nombre de Usuario -->
+            <!-- Campo fecha -->
             <EditText
-                android:id="@+id/txtNombreUsuario"
+                android:id="@+id/txtFechaIngreso"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Ingrese nombre"
-                android:inputType="text"
-                android:padding="12dp"
-                android:background="@drawable/edittext_border_white"/>
+                android:hint="(dia/mes/año)"
+                android:inputType="none"
+                android:focusable="false"
+                android:clickable="true"
+                android:padding="10dp"
+                android:background="@drawable/edittext_border_white" />
 
-
-            <!-- Mensaje de error -->
-            <TextView
-                android:id="@+id/tv_error_msg"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="#FF0000"
-                android:textSize="14sp"
-                android:visibility="gone" />
         </LinearLayout>
 
     </LinearLayout>
@@ -97,7 +88,7 @@
 
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/datoLista"
+        android:id="@+id/historial"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

@@ -1,6 +1,9 @@
 package com.example.proyecto_shem.vista;
 
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -33,7 +36,7 @@ import java.util.Map;
 
     public class RegistroPermisoSalidaActivity extends AppCompatActivity {
 
-        TextView txtNumeroDocumento, txtUsuario, txtDetalle, txtMicromovilidad;
+        TextView txtNumeroDocumento, txtUsuario, txtArea, txtDetalle, txtMicromovilidad;
         Spinner spinnerTipoDocumento;
         Button btnConsultar, btnRegistrar, btnRegresar;
         ImageView imgView;
@@ -48,6 +51,7 @@ import java.util.Map;
 
         txtNumeroDocumento = findViewById(R.id.txtNumeroDocumento);
         txtUsuario = findViewById(R.id.txtUsuario);
+        txtArea = findViewById(R.id.txtArea);
         txtDetalle = findViewById(R.id.txtDetalle);
         txtMicromovilidad = findViewById(R.id.txtMicromovilidad);
 
@@ -66,16 +70,45 @@ import java.util.Map;
         // Cargar datos en los spinners
         loadSpinnerData();
 
+        // Inicialmente, deshabilita el botón Registrar
+        btnRegistrar.setEnabled(false);
+        btnRegistrar.setBackgroundColor(0xFFA9A9A9);
+
+        txtUsuario.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Habilita el botón Registrar solo si txtUsuario tiene texto y cambia su color
+                if (s.length() > 0) {
+                    btnRegistrar.setEnabled(true);
+                    btnRegistrar.setBackgroundColor(Color.parseColor("#033657"));
+                } else {
+                    btnRegistrar.setEnabled(false);
+                    btnRegistrar.setBackgroundColor(0xFFA9A9A9); // Color gris
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+
         // Configuración de botones
         btnRegresar.setOnClickListener(v -> finish());
 
         btnConsultar.setOnClickListener(v -> {
             if (validarCampos()) {
-                String numDocumento = txtNumeroDocumento.getText().toString();
-                if (!numDocumento.isEmpty()) {
-                    consultarNumDocumento(numDocumento);
-                } else {
+                String numDocumento = txtNumeroDocumento.getText().toString().trim();
+                if (numDocumento.isEmpty()) {
                     Toast.makeText(RegistroPermisoSalidaActivity.this, "Ingrese el N° Documento", Toast.LENGTH_SHORT).show();
+                } else {
+                    // Si uno de los campos tiene un valor, procede con la consulta
+                    if (!numDocumento.isEmpty()) {
+                        consultarDocumento(numDocumento);
+                    }
                 }
             }
         });
@@ -87,57 +120,59 @@ import java.util.Map;
                 if (validateInputs()) {
                     String numDocumento = txtNumeroDocumento.getText().toString();
 
-                    // Verificar si el codigoUsuario ya está registrado en la tabla Salida
-                    databaseReference.child("Permiso Salida")
-                            .orderByChild("numDocumento")
-                            .equalTo(numDocumento)
-                            .addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    if (dataSnapshot.exists()) {
-                                        // Si existe, mostrar mensaje de usuario ya registrado
-                                        Toast.makeText(RegistroPermisoSalidaActivity.this, "Usuario ya salió a Cibertec", Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        // Si no existe, proceder con el registro de salida
-                                        String tipoDocumento = spinnerTipoDocumento.getSelectedItem().toString();
-                                        String numeroDocumento = txtNumeroDocumento.getText().toString();
-                                        String usuario = txtUsuario.getText().toString();
-                                        String detalle = txtDetalle.getText().toString();
-                                        String micromovilidad = txtMicromovilidad.getText().toString();
-                                        String imageUrl = imgView.getTag() != null ? imgView.getTag().toString() : "";
+                    // Proceder directamente con el registro de salida sin verificar en "Permiso Salida"
+                    String tipoDocumento = spinnerTipoDocumento.getSelectedItem().toString();
+                    String numeroDocumento = txtNumeroDocumento.getText().toString();
+                    String usuario = txtUsuario.getText().toString();
+                    String area = txtArea.getText().toString();
+                    String detalle = txtDetalle.getText().toString();
+                    String micromovilidad = txtMicromovilidad.getText().toString();
+                    String imageUrl = imgView.getTag() != null ? imgView.getTag().toString() : "";
 
-                                        // Obtener la fecha y hora actuales
-                                        Calendar calendar = Calendar.getInstance();
-                                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                                        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+                    // Obtener la fecha y hora actuales
+                    Calendar calendar = Calendar.getInstance();
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
 
-                                        String fechaSalida = dateFormat.format(calendar.getTime());
-                                        String horaSalida = timeFormat.format(calendar.getTime());
+                    String fechaSalida = dateFormat.format(calendar.getTime());
+                    String horaSalida = timeFormat.format(calendar.getTime());
 
-                                        Map<String, Object> datosSalida = new HashMap<>();
-                                        datosSalida.put("tipoDocumento", tipoDocumento);
-                                        datosSalida.put("numeroDocumento", numeroDocumento);
-                                        datosSalida.put("usuario", usuario);
-                                        datosSalida.put("detallePermiso", detalle);
-                                        datosSalida.put("micromovilidad", micromovilidad);
-                                        datosSalida.put("imageUrl", imageUrl);
-                                        datosSalida.put("fechaSalida", fechaSalida);
-                                        datosSalida.put("horaSalida", horaSalida);
+                    Map<String, Object> datosSalida = new HashMap<>();
+                    datosSalida.put("tipoDocumento", tipoDocumento);
+                    datosSalida.put("numeroDocumento", numeroDocumento);
+                    datosSalida.put("usuario", usuario);
+                    datosSalida.put("area", area);
+                    datosSalida.put("detallePermiso", detalle);
+                    datosSalida.put("micromovilidad", micromovilidad);
+                    datosSalida.put("imageUrl", imageUrl);
+                    datosSalida.put("fechaSalida", fechaSalida);
+                    datosSalida.put("horaSalida", horaSalida);
+                    datosSalida.put("estado", "activo"); // Añadir el campo de estado
 
-                                        databaseReference.child("Permiso Salida").push().setValue(datosSalida)
-                                                .addOnCompleteListener(task -> {
-                                                    if (task.isSuccessful()) {
-                                                        showSuccessDialog(usuario, micromovilidad);
-                                                    } else {
-                                                        Toast.makeText(RegistroPermisoSalidaActivity.this, "Error al registrar salida", Toast.LENGTH_SHORT).show();
+                    databaseReference.child("Permiso Salida").push().setValue(datosSalida)
+                            .addOnCompleteListener(task -> {
+                                if (task.isSuccessful()) {
+                                    showSuccessDialog(usuario, micromovilidad);
+
+                                    // Actualizar estado en la tabla Permiso a "inactivo"
+                                    databaseReference.child("Permiso Ingreso")
+                                            .orderByChild("numeroDocumento")
+                                            .equalTo(numDocumento)
+                                            .addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                                        snapshot.getRef().child("estado").setValue("inactivo"); // Cambiar estado a inactivo
                                                     }
-                                                });
-                                    }
-                                }
+                                                }
 
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-                                    Toast.makeText(RegistroPermisoSalidaActivity.this, "Error al verificar código de usuario", Toast.LENGTH_SHORT).show();
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError databaseError) {
+                                                    Toast.makeText(RegistroPermisoSalidaActivity.this, "Error al actualizar estado en Ingreso", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+                                } else {
+                                    Toast.makeText(RegistroPermisoSalidaActivity.this, "Error al registrar salida", Toast.LENGTH_SHORT).show();
                                 }
                             });
                 }
@@ -183,18 +218,65 @@ import java.util.Map;
         });
     }
 
-    private void consultarNumDocumento(String numDocumento) {
-        // Primero, intenta buscar en la tabla "estudiante"
-        databaseReference.child("Permiso Ingreso").orderByChild("numDocumento").equalTo(numDocumento)
+    private void consultarDocumento(String numDocumento) {
+        String numDocumentoUpper = numDocumento.toUpperCase();
+
+        // Verificar si el usuario ya existe en la tabla Ingreso
+        databaseReference.child("Permiso Salida")
+                .orderByChild("numeroDocumento")
+                .equalTo(numDocumentoUpper)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists()) {
-                            // Si encuentra el usuario en "estudiante", llena los datos
-                            cargarDatosNumDocumento(dataSnapshot);
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                String estado = snapshot.child("estado").getValue(String.class);
+
+                                if ("inactivo".equals(estado)) {
+                                    // El usuario puede volver a ingresar
+                                    consultarNumDocumento(numDocumentoUpper);
+                                } else {
+                                    // El usuario ya salió, mostrar mensaje
+                                    Toast.makeText(RegistroPermisoSalidaActivity.this, "Usuario ya salió de Cibertec", Toast.LENGTH_SHORT).show();
+                                    clearInputs();
+                                }
+                            }
                         } else {
-                            // Si no encuentra al usuario, muestra el mensaje
+                            // Si el usuario no está en Ingreso, consultar en las otras tablas
+                            consultarNumDocumento(numDocumentoUpper);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Toast.makeText(RegistroPermisoSalidaActivity.this, "Error al verificar el ingreso", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void consultarNumDocumento(String numDocumento) {
+        // Primero, intenta buscar en la tabla "Permiso Ingreso"
+        databaseReference.child("Permiso Ingreso").orderByChild("numeroDocumento").equalTo(numDocumento)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                       boolean usuarioActivoEncontrado = false;
+
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            String estado = snapshot.child("estado").getValue(String.class);
+
+                            if ("activo".equals(estado)) {
+                                usuarioActivoEncontrado = true;
+                                // Usuario está activo, cargar datos del usuario
+                                cargarDatosNumDocumento(dataSnapshot);
+                                break; // Deja de buscar cuando encuentras un usuario activo
+                            }
+                        }
+
+                        if (!usuarioActivoEncontrado) {
+                            // No hay usuarios activos encontrados, mostrar mensaje
                             Toast.makeText(RegistroPermisoSalidaActivity.this, "Usuario no ingreso a Cibertec", Toast.LENGTH_SHORT).show();
+                            clearInputs();
                         }
                     }
 
@@ -209,11 +291,13 @@ import java.util.Map;
         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
             String tipoDocumento = getStringValue(snapshot, "tipoDocumento");
             String usuario = getStringValue(snapshot, "usuario");
+            String area = getStringValue(snapshot, "area");
             String detalle = getStringValue(snapshot, "detallePermiso");
             String imageUrl = getStringValue(snapshot, "imageUrl");
-            String numDocumento = getStringValue(snapshot, "numDocumento");
+            String numDocumento = getStringValue(snapshot, "numeroDocumento");
 
             txtUsuario.setText(usuario);
+            txtArea.setText(area);
             txtDetalle.setText(detalle);
 
             setSpinnerValue(spinnerTipoDocumento, tipoDocumento);
@@ -259,14 +343,22 @@ import java.util.Map;
                 boolean found = false;
 
                 for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
-                    String numDocument = childSnapshot.child("numDocumento").getValue(String.class);
+                    String numDocument = childSnapshot.child("numeroDocumento").getValue(String.class);
+                    String estado = childSnapshot.child("estado").getValue(String.class);
 
-                    if (numDocument != null && numDocument.equals(numDocumento)) {
-                        String numDocumento = childSnapshot.child("tipoMicromovilidad").getValue(String.class);
-                        txtMicromovilidad.setText(numDocumento != null ? numDocumento : "");
+                    if (numDocument != null && numDocument.equals(numDocumento) && "activo".equals(estado)) {
+                        // Solo establece el valor de micromovilidad si el estado es activo
+                        String micromovilidad = childSnapshot.child("tipoMicromovilidad").getValue(String.class);
+                        txtMicromovilidad.setText(micromovilidad != null ? micromovilidad : "");
                         found = true;
                         break;
                     }
+                }
+
+                if (!found) {
+                    // Si no se encontró un usuario activo, establece un valor predeterminado o deja el campo vacío
+                    txtMicromovilidad.setText("");
+                    Toast.makeText(RegistroPermisoSalidaActivity.this, "Micromovilidad no encontrada para usuario activo", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -309,12 +401,17 @@ import java.util.Map;
             return false;
         }
 
-        if (txtDetalle.getText().toString().isEmpty()) {
+        if (txtDetalle.getText().toString().trim().isEmpty()) {
             Toast.makeText(this, "Ingrese el detalle de Permiso", Toast.LENGTH_SHORT).show();
             return false;
         }
 
         if (txtMicromovilidad.getText().toString().isEmpty()) {
+            Toast.makeText(this, "Usuario no ingreso a Cibertec", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (txtArea.getText().toString().isEmpty()) {
             Toast.makeText(this, "Usuario no ingreso a Cibertec", Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -339,9 +436,10 @@ import java.util.Map;
     private void clearInputs() {
         txtNumeroDocumento.setText("");
         txtUsuario.setText("");
+        txtArea.setText("");
         txtDetalle.setText("");
         txtMicromovilidad.setText("");
         spinnerTipoDocumento.setSelection(0);
-        imgView.setImageResource(0);
+        imgView.setImageResource(R.drawable.ic_launcher_foreground);
     }
 }

@@ -8,96 +8,79 @@ import java.util.Date;
 public class Ingreso implements Serializable {
 
     private int idIngreso;
-    private TipoUsuario tipoUsuario;
-    private String nombres;
-    private String apellidos;
-    private TipoDocumento tipoDocumento;
-    private String numDocumento;
-    private String codUsuario;
-    private String autorizo;
-    private String imgUsuario;
-    private Date fechaIngreso;
+    private String tipoUsuario;
+    private String usuario;
+    private String tipoDocumento;
+    private String numeroDocumento;
+    private String codigoUsuario;
+    private String imageUrl;
+    private String fechaIngreso;
     private String horaIngreso;
-    private TipoMicromovilidad tipoMicromovilidad;
+    private String tipoMicromovilidad;
 
-    // Getters y setters
+
     public int getIdIngreso() {
         return idIngreso;
     }
+
 
     public void setIdIngreso(int idIngreso) {
         this.idIngreso = idIngreso;
     }
 
-    public TipoUsuario getTipoUsuario() {
+    public String getTipoUsuario() {
         return tipoUsuario;
     }
 
-    public void setTipoUsuario(TipoUsuario tipoUsuario) {
+    public void setTipoUsuario(String tipoUsuario) {
         this.tipoUsuario = tipoUsuario;
     }
 
-    public String getNombres() {
-        return nombres;
+    public String getUsuario() {
+        return usuario;
     }
 
-    public void setNombres(String nombres) {
-        this.nombres = nombres;
+    public void setUsuario(String usuario) {
+        this.usuario = usuario;
     }
 
-    public String getApellidos() {
-        return apellidos;
-    }
-
-    public void setApellidos(String apellidos) {
-        this.apellidos = apellidos;
-    }
-
-    public TipoDocumento getTipoDocumento() {
+    public String getTipoDocumento() {
         return tipoDocumento;
     }
 
-    public void setTipoDocumento(TipoDocumento tipoDocumento) {
+    public void setTipoDocumento(String tipoDocumento) {
         this.tipoDocumento = tipoDocumento;
     }
 
-    public String getNumDocumento() {
-        return numDocumento;
+    public String getNumeroDocumento() {
+        return numeroDocumento;
     }
 
-    public void setNumDocumento(String numDocumento) {
-        this.numDocumento = numDocumento;
+    public void setNumeroDocumento(String numeroDocumento) {
+        this.numeroDocumento = numeroDocumento;
     }
 
-    public String getCodUsuario() {
-        return codUsuario;
+    public String getCodigoUsuario() {
+        return codigoUsuario;
     }
 
-    public void setCodUsuario(String codUsuario) {
-        this.codUsuario = codUsuario;
+    public void setCodigoUsuario(String codigoUsuario) {
+        this.codigoUsuario = codigoUsuario;
     }
 
-    public String getAutorizo() {
-        return autorizo;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setAutorizo(String autorizo) {
-        this.autorizo = autorizo;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
-    public String getImgUsuario() {
-        return imgUsuario;
-    }
-
-    public void setImgUsuario(String imgUsuario) {
-        this.imgUsuario = imgUsuario;
-    }
-
-    public Date getFechaIngreso() {
+    public String getFechaIngreso() {
         return fechaIngreso;
     }
 
-    public void setFechaIngreso(Date fechaIngreso) {
+    public void setFechaIngreso(String fechaIngreso) {
         this.fechaIngreso = fechaIngreso;
     }
 
@@ -109,11 +92,11 @@ public class Ingreso implements Serializable {
         this.horaIngreso = horaIngreso;
     }
 
-    public TipoMicromovilidad getTipoMicromovilidad() {
+    public String getTipoMicromovilidad() {
         return tipoMicromovilidad;
     }
 
-    public void setTipoMicromovilidad(TipoMicromovilidad tipoMicromovilidad) {
+    public void setTipoMicromovilidad(String tipoMicromovilidad) {
         this.tipoMicromovilidad = tipoMicromovilidad;
     }
 }

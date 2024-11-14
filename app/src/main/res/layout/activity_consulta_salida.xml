@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:paddingBottom="16dp"
-        android:text="CONSULTA DE SALIDA DE USUARIO"
+        android:text="CONSULTAR SALIDA DE USUARIOS"
         android:textAlignment="center"
         android:textSize="28sp"
         android:paddingTop="20dp"
@@ -28,34 +28,6 @@
         android:gravity="center"
         android:layout_marginBottom="16dp">
 
-        <!-- Layout vertical para el Código de Usuario -->
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:layout_marginEnd="8dp">
-
-            <!-- Etiqueta para Código de Usuario -->
-            <TextView
-                android:id="@+id/tv_cod_usuario"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="COD USUARIO"
-                android:textStyle="bold"
-                android:paddingBottom="4dp" />
-
-            <!-- Campo de Código de Usuario -->
-            <EditText
-                android:id="@+id/txtCodUsuario"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Ingrese código"
-                android:inputType="text"
-                android:padding="8dp"
-                android:background="@android:drawable/edit_text" />
-        </LinearLayout>
-
         <!-- Layout vertical para el Nombre de Usuario -->
         <LinearLayout
             android:layout_width="0dp"
@@ -68,9 +40,11 @@
                 android:id="@+id/tv_nombre_usuario"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="NOMBRE DEL USUARIO"
+                android:text="NOMBRE DEL USUARIO:"
                 android:textStyle="bold"
                 android:paddingBottom="4dp" />
+
+
 
             <!-- Campo de Nombre de Usuario -->
             <EditText
@@ -79,8 +53,18 @@
                 android:layout_height="wrap_content"
                 android:hint="Ingrese nombre"
                 android:inputType="text"
-                android:padding="8dp"
-                android:background="@android:drawable/edit_text" />
+                android:padding="12dp"
+                android:background="@drawable/edittext_border_white"/>
+
+
+            <!-- Mensaje de error -->
+            <TextView
+                android:id="@+id/tv_error_msg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#FF0000"
+                android:textSize="14sp"
+                android:visibility="gone" />
         </LinearLayout>
 
     </LinearLayout>
@@ -94,15 +78,6 @@
         android:layout_marginBottom="16dp">
 
         <Button
-            android:id="@+id/btnConsultar"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="CONSULTAR"
-            android:layout_marginEnd="8dp"
-            android:backgroundTint="#033657"/>
-
-        <Button
             android:id="@+id/btnRegresar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -111,14 +86,18 @@
             android:text="REGRESAR" />
     </LinearLayout>
 
-    <!-- Cuadro de Resultado -->
     <TextView
-        android:id="@+id/tvResultado"
+        android:id="@+id/tvRegistroCount"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="Total de registros: 0"
+        android:textAlignment="textEnd"
+        android:textSize="16sp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/datoLista"
         android:layout_width="match_parent"
-        android:layout_height="500dp"
-        android:layout_marginBottom="4dp"
-        android:background="@drawable/border"
-        android:text=""
-        android:gravity="start|top"/>
+        android:layout_height="match_parent" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

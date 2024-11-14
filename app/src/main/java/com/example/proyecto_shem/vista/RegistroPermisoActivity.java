@@ -1,6 +1,9 @@
 package com.example.proyecto_shem.vista;
 
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -30,7 +33,7 @@ import java.util.Map;
 public class RegistroPermisoActivity extends AppCompatActivity {
 
     TextView txtNumeroDocumento, txtUsuario, txtGenero, txtFechNacim, txtDetalle;
-    Spinner spinnerTipoDocumento, spinnerMicromovilidad;
+    Spinner spinnerTipoDocumento, spinnerArea, spinnerMicromovilidad;
     Button btnConsultar, btnRegistrar, btnRegresar;
     ImageView imgView;
 
@@ -50,6 +53,7 @@ public class RegistroPermisoActivity extends AppCompatActivity {
         txtDetalle = findViewById(R.id.txtDetalle);
         spinnerTipoDocumento = findViewById(R.id.spinnerTipoDocumento);
         spinnerMicromovilidad = findViewById(R.id.spinnerMicromovilidad);
+        spinnerArea = findViewById(R.id.spinnerArea);
         btnConsultar = findViewById(R.id.btnConsultar);
         btnRegistrar = findViewById(R.id.btnRegistrar);
         btnRegresar = findViewById(R.id.btnRegresar);
@@ -63,16 +67,44 @@ public class RegistroPermisoActivity extends AppCompatActivity {
         // Cargar datos en los spinners
         loadSpinnerData();
 
+        // Inicialmente, deshabilita el botón Registrar
+        btnRegistrar.setEnabled(false);
+        btnRegistrar.setBackgroundColor(0xFFA9A9A9);
+
+        txtUsuario.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() > 0) {
+                    btnRegistrar.setEnabled(true);
+                    btnRegistrar.setBackgroundColor(Color.parseColor("#033657"));
+                } else {
+                    btnRegistrar.setEnabled(false);
+                    btnRegistrar.setBackgroundColor(0xFFA9A9A9);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+
         // Configuración de botones
         btnRegresar.setOnClickListener(v -> finish());
 
         btnConsultar.setOnClickListener(v -> {
             if (validarCampos()) {
-                String numDocumento = txtNumeroDocumento.getText().toString();
-                if (!numDocumento.isEmpty()) {
-                    consultarNumDocumento(numDocumento);
-                } else {
+                String numDocumento = txtNumeroDocumento.getText().toString().trim();;
+                if (numDocumento.isEmpty()) {
                     Toast.makeText(RegistroPermisoActivity.this, "Ingrese el N° Documento", Toast.LENGTH_SHORT).show();
+                } else {
+                    // Si uno de los campos tiene un valor, procede con la consulta
+                    if (!numDocumento.isEmpty()) {
+                        consultarDocumento(numDocumento);
+                    }
                 }
             }
         });
@@ -85,25 +117,35 @@ public class RegistroPermisoActivity extends AppCompatActivity {
 
                     // Verificar si el usuario ya existe en la tabla Ingreso
                     databaseReference.child("Permiso Ingreso")
-                            .orderByChild("numDocumento")
-                            .equalTo(numDocumento)
-                            .addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    if (dataSnapshot.exists()) {
+                    .orderByChild("numDocumento")
+                    .equalTo(numDocumento)
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.exists()) {
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                    String estado = snapshot.child("estado").getValue(String.class);
+
+                                    if ("inactivo".equals(estado)) {
+                                        // El usuario puede volver a ingresar
+                                        registrarPermiso(numDocumento);
+                                    } else {
+                                        // Usuario aún está activo en la tabla Ingreso
                                         // El usuario ya ingresó, mostrar mensaje
                                         Toast.makeText(RegistroPermisoActivity.this, "Usuario ya ingresó a Cibertec", Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        // El usuario no existe, registrar datos
-                                        registrarPermiso(numDocumento); // Pasar el código en minúsculas
                                     }
                                 }
+                            } else {
+                                // El usuario no existe, registrar datos
+                                registrarPermiso(numDocumento); // Pasar el código en minúsculas
+                            }
+                        }
 
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-                                    Toast.makeText(RegistroPermisoActivity.this, "Error al verificar el permiso", Toast.LENGTH_SHORT).show();
-                                }
-                            });
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            Toast.makeText(RegistroPermisoActivity.this, "Error al verificar el permiso", Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
             }
         });
@@ -116,6 +158,7 @@ public class RegistroPermisoActivity extends AppCompatActivity {
         String fechNacim = txtFechNacim.getText().toString();
         String detalle = txtDetalle.getText().toString();
         String tipoMicromovilidad = spinnerMicromovilidad.getSelectedItem().toString();
+        String area = spinnerArea.getSelectedItem().toString(); // Obtenemos el valor de spinnerArea
         String imageUrl = imgView.getTag() != null ? imgView.getTag().toString() : "";
 
         Calendar calendar = Calendar.getInstance();
@@ -127,17 +170,29 @@ public class RegistroPermisoActivity extends AppCompatActivity {
 
         Map<String, Object> datosPermiso = new HashMap<>();
         datosPermiso.put("tipoDocumento", tipoDocumento);
-        datosPermiso.put("numDocumento", numDocumento);
+        datosPermiso.put("numeroDocumento", numDocumento);
         datosPermiso.put("usuario", usuario);
         datosPermiso.put("genero", genero);
         datosPermiso.put("fechNacim", fechNacim);
         datosPermiso.put("detallePermiso", detalle);
         datosPermiso.put("tipoMicromovilidad", tipoMicromovilidad);
+        datosPermiso.put("area", area);
         datosPermiso.put("imageUrl", imageUrl);
         datosPermiso.put("fechaIngreso", fechaIngreso);
         datosPermiso.put("horaIngreso", horaIngreso);
+        datosPermiso.put("estado", "activo"); // Añadir el campo de estado
 
-        databaseReference.child("Permiso Ingreso").push().setValue(datosPermiso)
+        databaseReference.child("Permiso Salida")
+        .orderByChild("numeroDocumento")
+        .equalTo(numDocumento)
+        .addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    snapshot.getRef().child("estado").setValue("inactivo"); // Cambiar estado a inactivo
+                }
+
+                databaseReference.child("Permiso Ingreso").push().setValue(datosPermiso)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         showSuccessDialog(usuario, tipoMicromovilidad);
@@ -145,12 +200,21 @@ public class RegistroPermisoActivity extends AppCompatActivity {
                         Toast.makeText(RegistroPermisoActivity.this, "Error al registrar permiso", Toast.LENGTH_SHORT).show();
                     }
                 });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(RegistroPermisoActivity.this, "Error al verificar estado en Salida", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void loadSpinnerData() {
         loadSpinnerFromFirebase(databaseReference.child("tipoDocumento"), spinnerTipoDocumento);
         loadSpinnerFromFirebase(databaseReference.child("tipoMicromovilidad"), spinnerMicromovilidad);
+        loadSpinnerFromFirebase(databaseReference.child("area"), spinnerArea);
     }
+
 
     private void loadSpinnerFromFirebase(DatabaseReference ref, Spinner spinner) {
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -186,6 +250,44 @@ public class RegistroPermisoActivity extends AppCompatActivity {
         });
     }
 
+    private void consultarDocumento(String numDocumento) {
+        String numDocumentoUpper = numDocumento.toUpperCase();
+
+        // Verificar si el usuario ya existe en la tabla Ingreso
+        databaseReference.child("Permiso Ingreso")
+        .orderByChild("numeroDocumento")
+        .equalTo(numDocumentoUpper)
+        .addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                boolean usuarioActivoEncontrado = false;
+
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    String estado = snapshot.child("estado").getValue(String.class);
+
+                    if ("activo".equals(estado)) {
+                        usuarioActivoEncontrado = true;
+                        break;
+                    }
+                }
+
+                if (usuarioActivoEncontrado) {
+                    // Usuario ya tiene un registro activo en "Ingreso"
+                    Toast.makeText(RegistroPermisoActivity.this, "Usuario ya ingresó a Cibertec", Toast.LENGTH_SHORT).show();
+                    clearInputs();
+                } else {
+                    // No se encontró un registro activo, el usuario puede ingresar de nuevo
+                    consultarNumDocumento(numDocumentoUpper);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(RegistroPermisoActivity.this, "Error al verificar el ingreso", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     private void consultarNumDocumento(String numDocumento) {
         // Primero, intenta buscar en la tabla "estudiante"
         databaseReference.child("dni").orderByChild("numDocumento").equalTo(numDocumento)
@@ -216,6 +318,9 @@ public class RegistroPermisoActivity extends AppCompatActivity {
                 if (dataSnapshot.exists()) {
                     // Si encuentra el usuario en "docente", llena los datos
                     cargarDatosNumDocumento(dataSnapshot);
+                } else {
+                    // Mostrar mensaje si no se encontró en ninguna de las tablas
+                    Toast.makeText(RegistroPermisoActivity.this, "N° de documento no existe", Toast.LENGTH_SHORT).show();
                 }
             }
             @Override
@@ -280,7 +385,7 @@ public class RegistroPermisoActivity extends AppCompatActivity {
     //MENSAJE REGISTRADO
     private void showSuccessDialog(String usuario, String tipoMicromovilidad) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("INGRESO REGISTRADO DE FORMA EXITOSA!!!!");
+        builder.setTitle("PERMISO REGISTRADO DE FORMA EXITOSA!!!!");
         builder.setMessage("INGRESO A CIBERTEC\n" + usuario + "\n" +
                         "TIPO DE MICROMOVILIDAD: " + tipoMicromovilidad)
                 .setPositiveButton("Aceptar", (dialog, id) -> dialog.dismiss());
@@ -306,7 +411,12 @@ public class RegistroPermisoActivity extends AppCompatActivity {
             }
         }
 
-        if (txtDetalle.getText().toString().isEmpty()) {
+        if (spinnerArea.getSelectedItemPosition() == 0) {
+            Toast.makeText(this, "Seleccione un área", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (txtDetalle.getText().toString().trim().isEmpty()) {
             Toast.makeText(this, "Ingrese el detalle de Permiso", Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -340,6 +450,7 @@ public class RegistroPermisoActivity extends AppCompatActivity {
         txtDetalle.setText("");
         spinnerTipoDocumento.setSelection(0);
         spinnerMicromovilidad.setSelection(0);
-        imgView.setImageResource(0);
+        spinnerArea.setSelection(0);
+        imgView.setImageResource(R.drawable.ic_launcher_foreground);
     }
 }

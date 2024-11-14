@@ -38,6 +38,12 @@
             <item android:id="@+id/nav_item_cuatro_dos"
                 android:icon="@drawable/busquedaingreso"
                 android:title="Salida"/>
+            <item android:id="@+id/nav_item_cuatro_tres"
+                android:icon="@drawable/busquedaingreso"
+                android:title="Permiso Ingreso"/>
+            <item android:id="@+id/nav_item_cuatro_cuatro"
+                android:icon="@drawable/busquedaingreso"
+                android:title="Permiso Salida"/>
         </menu>
     </item>
 

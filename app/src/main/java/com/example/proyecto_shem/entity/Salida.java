@@ -9,30 +9,20 @@ import java.util.Date;
 public class Salida implements Serializable {
 
     private int idSalida;
-    private TipoUsuario tipoUsuario;
-    private String nombres;
-    private String apellidos;
-    private TipoDocumento tipoDocumento;
-    private String numDocumento;
-    private String codUsuario;
-    private String imgUsuario;
-    private Date fechaSalida;
+    private String tipoUsuario;
+    private String usuario;
+    private String tipoDocumento;
+    private String numeroDocumento;
+    private String codigoUsuario;
+    private String imageUrl;
+    private String fechaSalida;
     private String horaSalida;
-    private TipoMicromovilidad tipoMicromovilidad;
+    private String micromovilidad;
 
-    // Constructor vacío
+
     public Salida() {
-        this.fechaSalida = new Date();  // Asigna la fecha actual
-
-        // Verifica si la versión de Android es al menos API 26
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            this.horaSalida = LocalTime.now().toString();  // Asigna la hora local si el SDK es >= 26
-        } else {
-            this.horaSalida = new Date().toString();  // Usa una alternativa para versiones anteriores
-        }
     }
 
-    // Getters y setters
     public int getIdSalida() {
         return idSalida;
     }
@@ -41,67 +31,59 @@ public class Salida implements Serializable {
         this.idSalida = idSalida;
     }
 
-    public TipoUsuario getTipoUsuario() {
+    public String getTipoUsuario() {
         return tipoUsuario;
     }
 
-    public void setTipoUsuario(TipoUsuario tipoUsuario) {
+    public void setTipoUsuario(String tipoUsuario) {
         this.tipoUsuario = tipoUsuario;
     }
 
-    public String getNombres() {
-        return nombres;
+    public String getUsuario() {
+        return usuario;
     }
 
-    public void setNombres(String nombres) {
-        this.nombres = nombres;
+    public void setUsuario(String usuario) {
+        this.usuario = usuario;
     }
 
-    public String getApellidos() {
-        return apellidos;
-    }
-
-    public void setApellidos(String apellidos) {
-        this.apellidos = apellidos;
-    }
-
-    public TipoDocumento getTipoDocumento() {
+    public String getTipoDocumento() {
         return tipoDocumento;
     }
 
-    public void setTipoDocumento(TipoDocumento tipoDocumento) {
+    public void setTipoDocumento(String tipoDocumento) {
         this.tipoDocumento = tipoDocumento;
     }
 
-    public String getNumDocumento() {
-        return numDocumento;
+    public String getNumeroDocumento() {
+        return numeroDocumento;
     }
 
-    public void setNumDocumento(String numDocumento) {
-        this.numDocumento = numDocumento;
+    public void setNumeroDocumento(String numeroDocumento) {
+        this.numeroDocumento = numeroDocumento;
     }
 
-    public String getCodUsuario() {
-        return codUsuario;
+    public String getCodigoUsuario() {
+        return codigoUsuario;
     }
 
-    public void setCodUsuario(String codUsuario) {
-        this.codUsuario = codUsuario;
+    public void setCodigoUsuario(String codigoUsuario) {
+        this.codigoUsuario = codigoUsuario;
     }
 
-    public String getImgUsuario() {
-        return imgUsuario;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setImgUsuario(String imgUsuario) {
-        this.imgUsuario = imgUsuario;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
-    public Date getFechaSalida() {
+    public String getFechaSalida() {
         return fechaSalida;
     }
 
-    public void setFechaSalida(Date fechaSalida) {
+    public void setFechaSalida(String fechaSalida) {
         this.fechaSalida = fechaSalida;
     }
 
@@ -113,11 +95,11 @@ public class Salida implements Serializable {
         this.horaSalida = horaSalida;
     }
 
-    public TipoMicromovilidad getTipoMicromovilidad() {
-        return tipoMicromovilidad;
+    public String getMicromovilidad() {
+        return micromovilidad;
     }
 
-    public void setTipoMicromovilidad(TipoMicromovilidad tipoMicromovilidad) {
-        this.tipoMicromovilidad = tipoMicromovilidad;
+    public void setMicromovilidad(String micromovilidad) {
+        this.micromovilidad = micromovilidad;
     }
 }

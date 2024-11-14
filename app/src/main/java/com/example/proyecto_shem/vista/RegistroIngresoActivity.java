@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.content.Intent;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -75,6 +76,31 @@ public class RegistroIngresoActivity extends AppCompatActivity {
         // Cargar los datos de Firebase en los spinners
         loadSpinnerData();
 
+        // Inicialmente, deshabilita el botón Ingreso
+        btnIngreso.setEnabled(false);
+        btnIngreso.setBackgroundColor(0xFFA9A9A9);
+
+        txtUsuario.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() > 0) {
+                    btnIngreso.setEnabled(true);
+                    btnIngreso.setBackgroundColor(Color.parseColor("#033657"));
+                } else {
+                    btnIngreso.setEnabled(false);
+                    btnIngreso.setBackgroundColor(0xFFA9A9A9);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+
         txtAutorizacion.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
@@ -82,10 +108,12 @@ public class RegistroIngresoActivity extends AppCompatActivity {
             }
 
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
         });
 
         btnEscanearQR.setOnClickListener(new View.OnClickListener() {
@@ -106,14 +134,31 @@ public class RegistroIngresoActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (validarCampos()) {
-                    String codUsuario = txtCodigoUsuario.getText().toString();
-                    String numDocumento = txtNumeroDocumento.getText().toString();
-                    if (!codUsuario.isEmpty()) {
-                        consultarCodUsuario(codUsuario);
-                    } else if (!numDocumento.isEmpty()) {
-                        consultarNumDocumento(numDocumento);
-                    } else {
+                    String codUsuario = txtCodigoUsuario.getText().toString().replaceAll("\\s", "");
+                    String numDocumento = txtNumeroDocumento.getText().toString().replaceAll("\\s", "");
+
+                    // Actualizar los campos sin espacios en blanco
+                    txtCodigoUsuario.setText(codUsuario);
+                    txtNumeroDocumento.setText(numDocumento);
+
+                    String codUsuarioPattern = "^[a-zA-Z]\\d{9}$";
+
+                    // Validar si ambos campos están vacíos o contienen solo espacios
+                    if (codUsuario.isEmpty() && numDocumento.isEmpty()) {
                         Toast.makeText(RegistroIngresoActivity.this, "Ingrese el Codigo Usuario o N° Documento", Toast.LENGTH_SHORT).show();
+                    } else {
+                        // Si el campo de codUsuario no está vacío, verificar su formato
+                        if (!codUsuario.isEmpty()) {
+                            if (codUsuario.matches(codUsuarioPattern)) {
+                                consultarUsuario(codUsuario);
+                            } else {
+                                // Mostrar mensaje de error si el formato no es válido
+                                Toast.makeText(RegistroIngresoActivity.this, "Formato de Código Usuario no válido", Toast.LENGTH_SHORT).show();
+                                clearInputs(); // Limpiar todos los campos si el formato es incorrecto
+                            }
+                        } else if (!numDocumento.isEmpty()) {
+                            consultarDocumento(numDocumento);
+                        }
                     }
                 }
             }
@@ -125,30 +170,12 @@ public class RegistroIngresoActivity extends AppCompatActivity {
                 if (validateInputs()) {
                     String codigoUsuario = txtCodigoUsuario.getText().toString();
 
-                    // Verificar si el usuario ya existe en la tabla Ingreso
-                    databaseReference.child("Ingreso")
-                        .orderByChild("codigoUsuario")
-                        .equalTo(codigoUsuario)
-                        .addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                if (dataSnapshot.exists()) {
-                                    // El usuario ya ingresó, mostrar mensaje
-                                    Toast.makeText(RegistroIngresoActivity.this, "Usuario ya ingresó a Cibertec", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    // El usuario no existe, registrar datos
-                                    registrarIngreso(codigoUsuario); // Pasar el código en minúsculas
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-                                Toast.makeText(RegistroIngresoActivity.this, "Error al verificar el ingreso", Toast.LENGTH_SHORT).show();
-                            }
-                        });
+                    registrarIngreso(codigoUsuario);
                 }
             }
         });
+
+
 
         btnRegresar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -165,6 +192,9 @@ public class RegistroIngresoActivity extends AppCompatActivity {
         String usuario = txtUsuario.getText().toString();
         String tipoMicromovilidad = spinnerMicromovilidad.getSelectedItem().toString();
         String imageUrl = imgView.getTag() != null ? imgView.getTag().toString() : "";
+
+        // Convertir codigoUsuario a mayúsculas
+        codigoUsuario = codigoUsuario.toUpperCase();
 
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -183,16 +213,38 @@ public class RegistroIngresoActivity extends AppCompatActivity {
         datosIngreso.put("imageUrl", imageUrl);
         datosIngreso.put("fechaIngreso", fechaIngreso);
         datosIngreso.put("horaIngreso", horaIngreso);
+        datosIngreso.put("estado", "activo"); // Añadir el campo de estado
 
-        databaseReference.child("Ingreso").push().setValue(datosIngreso)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        showSuccessDialog(usuario, tipoMicromovilidad);
-                    } else {
-                        Toast.makeText(RegistroIngresoActivity.this, "Error al registrar ingreso", Toast.LENGTH_SHORT).show();
+        // Actualizar el estado en la tabla Salida a "inactivo" si el usuario ya existe
+        databaseReference.child("Salida")
+                .orderByChild("codigoUsuario")
+                .equalTo(codigoUsuario)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            snapshot.getRef().child("estado").setValue("inactivo"); // Cambiar estado a inactivo
+                        }
+
+                        // Registrar el ingreso después de actualizar el estado en Salida
+                        databaseReference.child("Ingreso").push().setValue(datosIngreso)
+                                .addOnCompleteListener(task -> {
+                                    if (task.isSuccessful()) {
+                                        showSuccessDialog(usuario, tipoMicromovilidad);
+                                    } else {
+                                        Toast.makeText(RegistroIngresoActivity.this, "Error al registrar ingreso", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Toast.makeText(RegistroIngresoActivity.this, "Error al verificar estado en Salida", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
+
+
 
     // Método para cargar datos en los spinners desde Firebase
     private void loadSpinnerData() {
@@ -246,35 +298,23 @@ public class RegistroIngresoActivity extends AppCompatActivity {
             if (result.getContents() == null) {
                 Toast.makeText(this, "Lectura cancelada...", Toast.LENGTH_LONG).show();
             } else {
+                clearInputs();
                 String qrContent = result.getContents();
                 try {
                     JSONObject qrData = new JSONObject(qrContent);
 
-                    String tipoUsuario = qrData.getString("tipoUsuario");
+                    // Obtiene el código de usuario desde el QR
                     String codigoUsuario = qrData.getString("codigoUsuario");
-                    String tipoDocumento = qrData.getString("tipoDocumento");
-                    String numeroDocumento = qrData.getString("numeroDocumento");
-                    String usuario = qrData.getString("usuario");
-                    String autorizacion = qrData.getString("autorizacion");
-                    String imageUrl = qrData.getString("imageUrl");
 
+                    // Asigna el código al campo de texto
                     txtCodigoUsuario.setText(codigoUsuario);
-                    txtNumeroDocumento.setText(numeroDocumento);
-                    txtUsuario.setText(usuario);
-                    txtAutorizacion.setText(autorizacion);
-                    setSpinnerValue(spinnerTipoUsuario, tipoUsuario);
-                    setSpinnerValue(spinnerTipoDocumento, tipoDocumento);
 
-                    updateButtonState();
-
-                    Glide.with(this).load(imageUrl).into(imgView);
-                    imgView.setTag(imageUrl);
-
-                    Toast.makeText(this, "Datos leídos correctamente", Toast.LENGTH_LONG).show();
+                    // Llama al método para consultar datos en Firebase usando el código escaneado
+                    consultarUsuario(codigoUsuario);
 
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    Toast.makeText(this, "Error al leer los datos del QR", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "Código de Usuario no válido", Toast.LENGTH_LONG).show();
                 }
             }
         } else {
@@ -283,48 +323,85 @@ public class RegistroIngresoActivity extends AppCompatActivity {
     }
 
     //Para el Consultar por CODIGO USUARIO
+    private void consultarUsuario(String codUsuario) {
+        String codUsuarioUpper = codUsuario.toUpperCase();
+
+        // Verificar si el usuario ya existe en la tabla Ingreso y está "activo"
+        databaseReference.child("Ingreso")
+                .orderByChild("codigoUsuario")
+                .equalTo(codUsuarioUpper)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        boolean usuarioActivoEncontrado = false;
+
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            String estado = snapshot.child("estado").getValue(String.class);
+
+                            if ("activo".equals(estado)) {
+                                usuarioActivoEncontrado = true;
+                                break;
+                            }
+                        }
+
+                        if (usuarioActivoEncontrado) {
+                            // Usuario ya tiene un registro activo en "Ingreso"
+                            Toast.makeText(RegistroIngresoActivity.this, "Usuario ya ingresó a Cibertec", Toast.LENGTH_SHORT).show();
+                            clearInputs();
+                        } else {
+                            // No se encontró un registro activo, el usuario puede ingresar de nuevo
+                            consultarCodUsuario(codUsuarioUpper);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Toast.makeText(RegistroIngresoActivity.this, "Error al verificar el ingreso", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
     private void consultarCodUsuario(String codUsuario) {
         String codUsuarioUpper = codUsuario.toUpperCase();
-        // Primero, intenta buscar en la tabla "estudiante"
         databaseReference.child("estudiante").orderByChild("codUsuario").equalTo(codUsuarioUpper)
-        .addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    // Si encuentra el usuario en "estudiante", llena los datos
-                    cargarDatosCodUsuario(dataSnapshot);
-                } else {
-                    // Si no encuentra en "estudiante", busca en "docente"
-                    buscarEnDocente(codUsuario);
-                }
-            }
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            cargarDatosCodUsuario(dataSnapshot); // Si encuentra el usuario, carga los datos
+                        } else {
+                            // Si no se encuentra en "estudiante", busca en "docente"
+                            buscarEnDocente(codUsuario);
+                        }
+                    }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(RegistroIngresoActivity.this, "Error al consultar datos", Toast.LENGTH_SHORT).show();
-            }
-        });
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Toast.makeText(RegistroIngresoActivity.this, "Error al consultar datos", Toast.LENGTH_SHORT).show();
+
+                    }
+                });
     }
 
     private void buscarEnDocente(String codUsuario) {
         databaseReference.child("docente").orderByChild("codUsuario").equalTo(codUsuario)
-        .addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    // Si encuentra el usuario en "docente", llena los datos
-                    cargarDatosCodUsuario(dataSnapshot);
-                } else {
-                    // Si no encuentra en "docente", busca en "personalAdministrativo"
-                    buscarEnPersonalAdministrativo(codUsuario);
-                }
-            }
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            // Si encuentra el usuario en "docente", llena los datos
+                            cargarDatosCodUsuario(dataSnapshot);
+                        } else {
+                            // Si no encuentra en "docente", busca en "personalAdministrativo"
+                            buscarEnPersonalAdministrativo(codUsuario);
+                        }
+                    }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(RegistroIngresoActivity.this, "Error al consultar datos", Toast.LENGTH_SHORT).show();
-            }
-        });
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Toast.makeText(RegistroIngresoActivity.this, "Error al consultar datos", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private void buscarEnPersonalAdministrativo(String codUsuario) {
@@ -337,7 +414,8 @@ public class RegistroIngresoActivity extends AppCompatActivity {
                             cargarDatosCodUsuario(dataSnapshot);
                         } else {
                             // Si no encuentra en ninguna tabla
-                            Toast.makeText(RegistroIngresoActivity.this, "Código de usuario no encontrado", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(RegistroIngresoActivity.this, "Código de Usuario no válido", Toast.LENGTH_SHORT).show();
+                            clearInputs();
                         }
                     }
 
@@ -357,7 +435,7 @@ public class RegistroIngresoActivity extends AppCompatActivity {
             String nombres = getStringValue(snapshot, "nombres");
             String apellidos = getStringValue(snapshot, "apellidos");
             String autorizacion = getStringValue(snapshot, "autorizacion");
-            String imageUrl = getStringValue(snapshot, "imageUrl"); // Obtener la URL de la imagen
+            String imageUrl = getStringValue(snapshot, "imageUrl");
 
             // Combina los nombres y apellidos
             String usuario = (nombres != null ? nombres : "") + " " + (apellidos != null ? apellidos : "");
@@ -380,12 +458,50 @@ public class RegistroIngresoActivity extends AppCompatActivity {
                 Glide.with(this)
                         .load(imageUrl)
                         .into(imgView);
-                imgView.setTag(imageUrl); // Guardar la URL en el tag del ImageView
+                imgView.setTag(imageUrl);
             }
         }
     }
 
     //Para el Consultar por NÚMERO DE DOCUMENTO
+    private void consultarDocumento(String numDocumento) {
+        String numDocumentoUpper = numDocumento.toUpperCase();
+
+        // Verificar si el usuario ya existe en la tabla Ingreso y está "activo"
+        databaseReference.child("Ingreso")
+                .orderByChild("numeroDocumento")
+                .equalTo(numDocumentoUpper)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        boolean usuarioActivoEncontrado = false;
+
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            String estado = snapshot.child("estado").getValue(String.class);
+
+                            if ("activo".equals(estado)) {
+                                usuarioActivoEncontrado = true;
+                                break;
+                            }
+                        }
+
+                        if (usuarioActivoEncontrado) {
+                            // Usuario ya tiene un registro activo en "Ingreso"
+                            Toast.makeText(RegistroIngresoActivity.this, "Usuario ya ingresó a Cibertec", Toast.LENGTH_SHORT).show();
+                            clearInputs();
+                        } else {
+                            // No se encontró un registro activo, el usuario puede ingresar de nuevo
+                            consultarNumDocumento(numDocumentoUpper);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Toast.makeText(RegistroIngresoActivity.this, "Error al verificar el ingreso", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
     private void consultarNumDocumento(String numDocumento) {
         // Primero, intenta buscar en la tabla "estudiante"
         databaseReference.child("estudiante").orderByChild("numDocumento").equalTo(numDocumento)
@@ -439,7 +555,8 @@ public class RegistroIngresoActivity extends AppCompatActivity {
                     cargarDatosNumDocumento(dataSnapshot);
                 } else {
                     // Si no encuentra en ninguna tabla
-                    Toast.makeText(RegistroIngresoActivity.this, "Número de Documento no encontrado", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegistroIngresoActivity.this, "Número de Documento no válido", Toast.LENGTH_SHORT).show();
+
                 }
             }
 
@@ -455,18 +572,18 @@ public class RegistroIngresoActivity extends AppCompatActivity {
         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
             int idTipoUsuario = Integer.parseInt(getStringValue(snapshot, "idTipoUsuario"));
             int idTipoDocumento = Integer.parseInt(getStringValue(snapshot, "idTipoDocumento"));
-            String codUsuario = getStringValue(snapshot, "codUsuario");
             String nombres = getStringValue(snapshot, "nombres");
             String apellidos = getStringValue(snapshot, "apellidos");
             String autorizacion = getStringValue(snapshot, "autorizacion");
-            String imageUrl = getStringValue(snapshot, "imageUrl"); // Obtener la URL de la imagen
+            String imageUrl = getStringValue(snapshot, "imageUrl");
+            String codigoUsuario = getStringValue(snapshot, "codUsuario"); // Obtener el código de usuario
 
             // Combina los nombres y apellidos
             String usuario = (nombres != null ? nombres : "") + " " + (apellidos != null ? apellidos : "");
 
             txtUsuario.setText(usuario);
             txtAutorizacion.setText(autorizacion != null ? autorizacion : "No Autorizado");
-            txtCodigoUsuario.setText(codUsuario != null ? codUsuario : "");
+            txtCodigoUsuario.setText(codigoUsuario != null ? codigoUsuario : "");
 
             // Usar el mapa para obtener el nombre según el ID y luego setear el valor en el Spinner
             String tipoUsuario = tipoUsuarioMap.get(idTipoUsuario);
@@ -517,13 +634,6 @@ public class RegistroIngresoActivity extends AppCompatActivity {
 
     //VALIDACIONES
     private boolean validateInputs() {
-        String numDocumento = txtNumeroDocumento.getText().toString();
-        if (!numDocumento.isEmpty()) {
-            if (numDocumento.length() != 8 || !numDocumento.matches("\\d+")) {
-                Toast.makeText(this, "El número de documento debe tener 8 dígitos", Toast.LENGTH_SHORT).show();
-                return false;
-            }
-        }
 
         if (spinnerTipoUsuario.getSelectedItemPosition() == 0) {
             Toast.makeText(this, "Ingrese datos", Toast.LENGTH_SHORT).show();
@@ -542,11 +652,6 @@ public class RegistroIngresoActivity extends AppCompatActivity {
 
         if (txtNumeroDocumento.getText().toString().isEmpty()) {
             Toast.makeText(this, "Ingrese el número de documento", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-
-        if (txtUsuario.getText().toString().isEmpty()) {
-            Toast.makeText(this, "Ingrese el nombre de usuario", Toast.LENGTH_SHORT).show();
             return false;
         }
 
@@ -593,6 +698,7 @@ public class RegistroIngresoActivity extends AppCompatActivity {
         spinnerTipoUsuario.setSelection(0);
         spinnerTipoDocumento.setSelection(0);
         spinnerMicromovilidad.setSelection(0);
-        imgView.setImageResource(0);
+        imgView.setImageResource(R.drawable.ic_launcher_foreground);
     }
+
 }

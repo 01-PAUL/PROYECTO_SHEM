@@ -11,9 +11,9 @@
         android:id="@+id/tvTitulo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="13dp"
         android:gravity="center"
-        android:paddingTop="20dp"
+        android:paddingTop="2dp"
         android:text="Registro de permiso de usuario"
         android:textColor="@android:color/black"
         android:textSize="28sp"
@@ -24,7 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginBottom="30dp">
+        android:layout_marginBottom="10dp">
 
         <!-- Tipo de documento Label -->
         <LinearLayout
@@ -81,13 +81,13 @@
         android:text="CONSULTAR"
         android:textColor="@android:color/white"
         android:backgroundTint="#033657"
-        android:layout_marginBottom="30dp" />
+        android:layout_marginBottom="14dp" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginBottom="30dp">
+        android:layout_marginBottom="10dp">
 
         <!-- Usuario y Autorización (Columna Izquierda) -->
         <LinearLayout
@@ -161,6 +161,24 @@
             android:contentDescription="Imagen del usuario" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 
+    <!-- Área Label -->
+    <TextView
+        android:id="@+id/tvArea"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Área:"
+        android:textSize="16sp"
+        android:textColor="@android:color/black"
+        android:padding="5dp"
+        android:layout_marginBottom="1dp" />
+
+    <!-- Spinner para Área -->
+    <Spinner
+        android:id="@+id/spinnerArea"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginBottom="2dp"/>
+
     <!-- Detalle de Permiso Label -->
     <TextView
         android:id="@+id/tvDetallePermiso"
@@ -170,14 +188,14 @@
         android:textSize="16sp"
         android:textColor="@android:color/black"
         android:paddingTop="10dp"
-        android:layout_marginBottom="4dp" />
+        android:layout_marginBottom="1dp" />
 
     <EditText
         android:id="@+id/txtDetalle"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:hint="Ingrese el detalle de permiso"
-        android:layout_marginBottom="10dp"/>
+        android:layout_marginBottom="11dp"/>
 
     <TextView
         android:id="@+id/tvMicromovilidad"
@@ -186,14 +204,14 @@
         android:text="Micromovilidad:"
         android:textSize="16sp"
         android:textColor="@android:color/black"
-        android:padding="1dp"
-        android:layout_marginBottom="4dp" />
+        android:padding="5dp"
+        android:layout_marginBottom="1dp" />
 
     <Spinner
         android:id="@+id/spinnerMicromovilidad"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:layout_marginBottom="15dp"/>
+        android:layout_marginBottom="10dp"/>
 
     <!-- Botones Registrar y Regresar en horizontal -->
     <androidx.appcompat.widget.LinearLayoutCompat
