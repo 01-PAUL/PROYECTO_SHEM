@@ -1,5 +1,6 @@
 package com.example.proyecto_shem.vista;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -18,7 +19,7 @@ public class DetalleSalidaActivity extends AppCompatActivity {
 
     TextView detalleTipoUsuario, detalleNomUsuario, detalleCodigoUsuario, detalleTipoDoc, detalleNumDoc, detalleMicromovilidad, detalleFechaSalida, detalleHoraSalida;
     ImageView detalleImagen;
-    Button btnRegresar;
+    Button btnHistorial, btnRegresar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,6 +27,7 @@ public class DetalleSalidaActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detalle_salida);
 
         btnRegresar = findViewById(R.id.btnRegresar);
+        btnHistorial = findViewById(R.id.btnHistorial);
         detalleTipoUsuario = findViewById(R.id.detalleTipoUsuario);
         detalleImagen = findViewById(R.id.detalleImagen);
         detalleNomUsuario = findViewById(R.id.detalleNomUsuario);
@@ -50,6 +52,12 @@ public class DetalleSalidaActivity extends AppCompatActivity {
         }
 
         btnRegresar.setOnClickListener(v -> finish());
-
+        btnHistorial.setOnClickListener(v -> {
+            Intent intent = new Intent(DetalleSalidaActivity.this, HistorialSalidaActivity.class);
+            intent.putExtra("codigoUsuario", detalleCodigoUsuario.getText().toString());
+            intent.putExtra("usuario", detalleNomUsuario.getText().toString());
+            startActivity(intent);
+            finish();
+        });
     }
 }

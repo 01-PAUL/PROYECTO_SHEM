@@ -13,11 +13,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:paddingBottom="16dp"
-        android:text="HSITORIAL DE INGRESO:"
+        android:paddingBottom="30dp"
+        android:text="HISTORIAL DE INGRESO DEL USUARIO"
         android:textAlignment="center"
-        android:textSize="28sp"
-        android:paddingTop="40dp"
+        android:textSize="30sp"
+        android:paddingTop="32dp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/nomUsuarioSelect"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="USUARIO"
+        android:gravity="center"
+        android:textSize="25sp"
         android:textStyle="bold" />
 
     <!-- Layout horizontal para los campos de texto con etiquetas arriba -->
@@ -35,9 +45,8 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
-            <!-- Etiqueta para Nombre de Usuario -->
             <TextView
-                android:id="@+id/tv_nombre_usuario"
+                android:id="@+id/tv_fecha_ingreso"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="SELECCIONE UNA FECHA:"
@@ -50,12 +59,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="(dia/mes/año)"
-                android:inputType="none"
+                android:inputType="date"
                 android:focusable="false"
                 android:clickable="true"
                 android:padding="10dp"
                 android:background="@drawable/edittext_border_white" />
 
+            <!-- Mensaje de error -->
+            <TextView
+                android:id="@+id/tv_error_msg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#FF0000"
+                android:textSize="14sp"
+                android:visibility="gone" />
         </LinearLayout>
 
     </LinearLayout>

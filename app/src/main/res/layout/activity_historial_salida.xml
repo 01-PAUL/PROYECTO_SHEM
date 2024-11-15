@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -14,11 +15,40 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:paddingBottom="16dp"
-        android:text="CONSULTAR SALIDA DE USUARIOS"
+        android:text="HISTORIAL DE SALIDA DEL USUARIO"
         android:textAlignment="center"
         android:textSize="28sp"
-        android:paddingTop="20dp"
+        android:paddingTop="40dp"
         android:textStyle="bold" />
+
+    <!-- Usuario: campo no editable en layout horizontal -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/tv_usuario_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Usuario:"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_usuario"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="Nombre del Usuario"
+            android:textSize="18sp"
+            android:textColor="@android:color/black"
+            android:inputType="none"
+            android:focusable="false"
+            android:clickable="false"/>
+    </LinearLayout>
 
     <!-- Layout horizontal para los campos de texto con etiquetas arriba -->
     <LinearLayout
@@ -40,24 +70,23 @@
                 android:id="@+id/tv_nombre_usuario"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="NOMBRE DEL USUARIO:"
+                android:text="SELECCIONE UNA FECHA:"
                 android:textStyle="bold"
-                android:paddingBottom="4dp" />
+                android:paddingBottom="4dp"
+                android:textSize="16sp"/>
 
-
-
-            <!-- Campo de Nombre de Usuario -->
+            <!-- Campo fecha -->
             <EditText
-                android:id="@+id/txtNombreUsuario"
+                android:id="@+id/txtFechaIngreso"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Ingrese nombre"
-                android:inputType="text"
-                android:padding="12dp"
-                android:background="@drawable/edittext_border_white"/>
+                android:hint="(año/mes/dia)"
+                android:inputType="none"
+                android:focusable="false"
+                android:clickable="true"
+                android:padding="10dp"
+                android:background="@drawable/edittext_border_white" />
 
-
-            <!-- Mensaje de error -->
             <TextView
                 android:id="@+id/tv_error_msg"
                 android:layout_width="match_parent"
@@ -90,13 +119,13 @@
         android:id="@+id/tvRegistroCount"
         android:layout_width="355dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="10dp"
         android:text="Total de registros: 0"
         android:textAlignment="textEnd"
         android:textSize="16sp" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/datoLista"
+        android:id="@+id/historial"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

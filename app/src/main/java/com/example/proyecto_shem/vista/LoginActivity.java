@@ -2,7 +2,9 @@ package com.example.proyecto_shem.vista;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -68,8 +70,8 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String emailUser = txtLogin.getText().toString().trim();
-                String passUser = txtClave.getText().toString().trim();
+                String emailUser = txtLogin.getText().toString().replaceAll("\\s", "");
+                String passUser = txtClave.getText().toString().replaceAll("\\s", "");
 
                 // Validación de los campos de email y contraseña
                 if (emailUser.isEmpty()) {
@@ -100,6 +102,41 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
+
+        txtLogin.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Remover los espacios si el usuario intenta ingresarlos
+                if (s.toString().contains(" ")) {
+                    txtLogin.setText(s.toString().replace(" ", ""));
+                    txtLogin.setSelection(txtLogin.getText().length()); // Mover el cursor al final del texto
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
+        txtClave.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Remover los espacios si el usuario intenta ingresarlos
+                if (s.toString().contains(" ")) {
+                    txtClave.setText(s.toString().replace(" ", ""));
+                    txtClave.setSelection(txtClave.getText().length()); // Mover el cursor al final del texto
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
 
         olvidasteContrasena.setOnClickListener(new View.OnClickListener() {
             @Override

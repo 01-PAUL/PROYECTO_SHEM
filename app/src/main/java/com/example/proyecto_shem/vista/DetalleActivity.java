@@ -22,7 +22,6 @@ public class DetalleActivity extends AppCompatActivity {
     ImageView detalleImagen;
     Button btnHistorial, btnRegresar;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,10 +55,11 @@ public class DetalleActivity extends AppCompatActivity {
 
         btnRegresar.setOnClickListener(v -> finish());
         btnHistorial.setOnClickListener(v -> {
-            // Crea una intención para iniciar la actividad HistorialIngresoActivity
             Intent intent = new Intent(DetalleActivity.this, HistorialIngresoUsuarioActivity.class);
-            startActivity(intent);  // Inicia la actividad
-            finish();  // Opcionalmente, puedes llamar a finish() si quieres cerrar DetalleActivity
+            intent.putExtra("codigoUsuario", detalleCodigoUsuario.getText().toString());
+            intent.putExtra("usuario", detalleNomUsuario.getText().toString());
+            startActivity(intent);
+            finish();
         });
 
     }

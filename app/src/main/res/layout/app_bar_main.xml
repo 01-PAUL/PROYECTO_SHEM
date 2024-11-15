@@ -9,7 +9,7 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#FEFEFE"
+        android:background="#FFFFFF"
         android:fitsSystemWindows="true">
 
         <androidx.appcompat.widget.Toolbar
@@ -25,8 +25,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
-            android:padding="8dp"
             android:fontFamily="sans-serif-condensed-medium"
+            android:padding="8dp"
             android:text="BIENVENIDO AL SISTEMA"
             android:textAlignment="center"
             android:textColor="#033F6B"
@@ -44,6 +44,7 @@
             android:textAlignment="center"
             android:textColor="#555555"
             android:textSize="44sp" />
+
         <ImageView
             android:id="@+id/imageView3"
             android:layout_width="match_parent"

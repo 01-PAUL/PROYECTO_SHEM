@@ -6,16 +6,20 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.DatePicker;
 import android.widget.Toast;
 
+import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.proyecto_shem.R;
-import com.example.proyecto_shem.adapter.HistorialIngresoAdapter;
-import com.example.proyecto_shem.entity.Ingreso;
+import com.example.proyecto_shem.adapter.HistorialSalidaAdapter;
+import com.example.proyecto_shem.adapter.SalidaAdapter;
+import com.example.proyecto_shem.entity.Salida;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -25,77 +29,85 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class HistorialIngresoUsuarioActivity extends AppCompatActivity {
+public class HistorialSalidaActivity extends AppCompatActivity {
 
     Button btnRegresar;
     EditText txtFechaIngreso;
-    TextView nomUsuarioSelect, tvRegistroCount, tvErrorMsg;
+    TextView tvRegistroCount, tvErrorMsg, tv_usuario;
     DatabaseReference databaseReference;
     RecyclerView recyclerView;
-    HistorialIngresoAdapter historialIngresoAdapter;
-    ArrayList<Ingreso> list;
-    ArrayList<Ingreso> originalList; // Lista original sin filtrar
-    private String codigoUsuario;
+    HistorialSalidaAdapter historialSalidaAdapter;
+    ArrayList<Salida> list;
+    ArrayList<Salida> originalList;
+    String codigoUsuario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_historial_ingreso_usuario);
+        EdgeToEdge.enable(this);
+        setContentView(R.layout.activity_historial_salida);
 
-        // Inicialización de las vistas
+        btnRegresar = findViewById(R.id.btnRegresar);
         txtFechaIngreso = findViewById(R.id.txtFechaIngreso);
-        tvRegistroCount = findViewById(R.id.tvRegistroCount);
-        nomUsuarioSelect = findViewById(R.id.nomUsuarioSelect);
+        tv_usuario = findViewById(R.id.tv_usuario);
         tvErrorMsg = findViewById(R.id.tv_error_msg);
+        tvRegistroCount = findViewById(R.id.tvRegistroCount);
+        btnRegresar = findViewById(R.id.btnRegresar);
         recyclerView = findViewById(R.id.historial);
 
-        // Obtener el nombre de usuario desde el Intent
-        String nombreUsuario = getIntent().getStringExtra("nombreUsuario");
-        nomUsuarioSelect.setText("USUARIO: " + nombreUsuario);
-
-        // Inicialización de Firebase y RecyclerView
-        databaseReference = FirebaseDatabase.getInstance().getReference("Ingreso");
+        databaseReference = FirebaseDatabase.getInstance().getReference("Salida");
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         list = new ArrayList<>();
         originalList = new ArrayList<>();
-        historialIngresoAdapter = new HistorialIngresoAdapter(this, list);
-        recyclerView.setAdapter(historialIngresoAdapter);
+        historialSalidaAdapter = new HistorialSalidaAdapter(this, list);
+        recyclerView.setAdapter(historialSalidaAdapter);
 
-        // Cargar todo el historial al inicio
-        cargarTodosLosDatos();
-
-        btnRegresar = findViewById(R.id.btnRegresar);
-        btnRegresar.setOnClickListener(v -> finish());
-
-        // Configurar el evento para la selección de fecha
-        txtFechaIngreso.setOnClickListener(v -> mostrarCalendarioYFiltrar(nombreUsuario));
-
-
+        // Obtener el código de usuario desde el Intent
         Bundle bundle = getIntent().getExtras();
         if(bundle != null){
             codigoUsuario = bundle.getString("codigoUsuario");
-            nomUsuarioSelect.setText(bundle.getString("usuario"));
+            tv_usuario.setText(bundle.getString("usuario"));
             cargarDatosEspecificos(codigoUsuario);
         } else {
             // Si no hay código de usuario, cargar todos los datos
             cargarTodosLosDatos();
         }
+
+        txtFechaIngreso.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDatePickerDialog();
+            }
+        });
+
+        btnRegresar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
-    private void mostrarCalendarioYFiltrar(String codigoUsuario) {
-        // Obtener la fecha actual
-        Calendar calendar = Calendar.getInstance();
+
+    private void showDatePickerDialog() {
+        final Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-        // Crear un DatePickerDialog con fecha máxima como la fecha actual
-        DatePickerDialog datePickerDialog = new DatePickerDialog(this, (view, selectedYear, selectedMonth, dayOfMonth) -> {
-            String fechaSeleccionada = String.format("%04d-%02d-%02d", selectedYear, selectedMonth + 1, dayOfMonth);
-            txtFechaIngreso.setText(fechaSeleccionada);
-            cargarDatosFiltrados(fechaSeleccionada);
-        }, year, month, day);
+        DatePickerDialog datePickerDialog = new DatePickerDialog(
+                HistorialSalidaActivity.this,
+                new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int selectedYear, int selectedMonth, int dayOfMonth) {
+                        String fechaSeleccionada = String.format("%04d-%02d-%02d", selectedYear, selectedMonth + 1, dayOfMonth);
+                        txtFechaIngreso.setText(fechaSeleccionada);
+                        cargarDatosFiltrados(fechaSeleccionada);
+                    }
+                },
+                year, month, day
+        );
 
         // Establecer la fecha máxima (hoy) para deshabilitar fechas futuras
         datePickerDialog.getDatePicker().setMaxDate(calendar.getTimeInMillis());
@@ -106,14 +118,14 @@ public class HistorialIngresoUsuarioActivity extends AppCompatActivity {
         // Limpiar la lista para el nuevo filtro
         list.clear();
 
-        // Comparar la fecha seleccionada con cada fecha de ingreso en originalList
-        for (Ingreso ingreso : originalList) {
-            if (fechaSeleccionada.equals(ingreso.getFechaIngreso())) {
-                list.add(ingreso);
+        // Comparar la fecha seleccionada con cada fecha de salida en originalList
+        for (Salida salida : originalList) {
+            if (fechaSeleccionada.equals(salida.getFechaSalida())) {
+                list.add(salida);
             }
         }
 
-        historialIngresoAdapter.notifyDataSetChanged();
+        historialSalidaAdapter.notifyDataSetChanged();
         actualizarContadorRegistros();
 
         // Mostrar mensaje si no hay resultados
@@ -125,37 +137,32 @@ public class HistorialIngresoUsuarioActivity extends AppCompatActivity {
         }
     }
 
-    private void actualizarContadorRegistros() {
-        tvRegistroCount.setText("Total de registros: " + list.size());
-        tvRegistroCount.setVisibility(View.VISIBLE);
-    }
-
-
     private void cargarTodosLosDatos() {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 list.clear();
-                originalList.clear(); // Limpia la lista original antes de agregar nuevos datos
+                originalList.clear();
 
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    Ingreso ingreso = dataSnapshot.getValue(Ingreso.class);
-                    if (ingreso != null) {
-                        list.add(ingreso);
-                        originalList.add(ingreso); // Guardar en la lista original también
+                    Salida salida = dataSnapshot.getValue(Salida.class);
+                    if (salida != null) {
+                        list.add(salida);
+                        originalList.add(salida);
                     }
-                }
 
-                historialIngresoAdapter.notifyDataSetChanged();
+                }
                 actualizarContadorRegistros();
+                historialSalidaAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(HistorialIngresoUsuarioActivity.this, "Error al obtener datos", Toast.LENGTH_SHORT).show();
+                Toast.makeText(HistorialSalidaActivity.this, "Error al obtener datos", Toast.LENGTH_SHORT).show();
             }
         });
     }
+
     private void cargarDatosEspecificos(String codigoUsuario) {
         databaseReference.orderByChild("codigoUsuario").equalTo(codigoUsuario)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -163,19 +170,29 @@ public class HistorialIngresoUsuarioActivity extends AppCompatActivity {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         list.clear();
                         originalList.clear();
+
                         for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                            Ingreso ingreso = dataSnapshot.getValue(Ingreso.class);
-                            list.add(ingreso);
-                            originalList.add(ingreso); // Guardar en la lista original también
+                            Salida salida = dataSnapshot.getValue(Salida.class);
+                            if (salida != null) {
+                                list.add(salida);
+                                originalList.add(salida);
+                            }
                         }
                         actualizarContadorRegistros();
-                        historialIngresoAdapter.notifyDataSetChanged();
+                        historialSalidaAdapter.notifyDataSetChanged();
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-                        Toast.makeText(HistorialIngresoUsuarioActivity.this, "Error al obtener datos específicos", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(HistorialSalidaActivity.this, "Error al obtener datos específicos", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
+
+
+    private void actualizarContadorRegistros() {
+        tvRegistroCount.setText("Total de registros: " + list.size());
+        tvRegistroCount.setVisibility(View.VISIBLE);
+    }
 }
+
