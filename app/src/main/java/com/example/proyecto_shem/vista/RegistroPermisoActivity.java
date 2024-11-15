@@ -158,7 +158,7 @@ public class RegistroPermisoActivity extends AppCompatActivity {
         String fechNacim = txtFechNacim.getText().toString();
         String detalle = txtDetalle.getText().toString();
         String tipoMicromovilidad = spinnerMicromovilidad.getSelectedItem().toString();
-        String area = spinnerArea.getSelectedItem().toString(); // Obtenemos el valor de spinnerArea
+        String area = spinnerArea.getSelectedItem().toString();
         String imageUrl = imgView.getTag() != null ? imgView.getTag().toString() : "";
 
         Calendar calendar = Calendar.getInstance();
