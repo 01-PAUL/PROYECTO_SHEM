@@ -9,31 +9,18 @@ import java.util.Date;
 public class Permiso implements Serializable {
 
     private int idPermiso;
-    private String nombres;
-    private String apellidos;
-    private TipoDocumento tipoDocumento;
+    private String usuario;
+    private String tipoDocumento;
     private String numDocumento;
     private String genero;
     private String nacionalidad;
-    private String imgUsuario;
+    private String imageUrl;
     private String detallePermiso;
-    private Date fechaSalida;
-    private String horaSalida;
-    private TipoMicromovilidad tipoMicromovilidad;
+    private String area;
+    private String fechaIngreso;
+    private String horaIngreso;
+    private String tipoMicromovilidad;
 
-    // Constructor vacío
-    public Permiso() {
-        this.fechaSalida = new Date();  // Asigna la fecha actual
-
-        // Verifica si la versión de Android es al menos API 26
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            this.horaSalida = LocalTime.now().toString();  // Asigna la hora local si el SDK es >= 26
-        } else {
-            this.horaSalida = new Date().toString();  // Usa una alternativa para versiones anteriores
-        }
-    }
-
-    // Getters y setters
 
     public int getIdPermiso() {
         return idPermiso;
@@ -43,27 +30,19 @@ public class Permiso implements Serializable {
         this.idPermiso = idPermiso;
     }
 
-    public String getNombres() {
-        return nombres;
+    public String getUsuario() {
+        return usuario;
     }
 
-    public void setNombres(String nombres) {
-        this.nombres = nombres;
+    public void setUsuario(String usuario) {
+        this.usuario = usuario;
     }
 
-    public String getApellidos() {
-        return apellidos;
-    }
-
-    public void setApellidos(String apellidos) {
-        this.apellidos = apellidos;
-    }
-
-    public TipoDocumento getTipoDocumento() {
+    public String getTipoDocumento() {
         return tipoDocumento;
     }
 
-    public void setTipoDocumento(TipoDocumento tipoDocumento) {
+    public void setTipoDocumento(String tipoDocumento) {
         this.tipoDocumento = tipoDocumento;
     }
 
@@ -91,12 +70,12 @@ public class Permiso implements Serializable {
         this.nacionalidad = nacionalidad;
     }
 
-    public String getImgUsuario() {
-        return imgUsuario;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setImgUsuario(String imgUsuario) {
-        this.imgUsuario = imgUsuario;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public String getDetallePermiso() {
@@ -107,27 +86,35 @@ public class Permiso implements Serializable {
         this.detallePermiso = detallePermiso;
     }
 
-    public Date getFechaSalida() {
-        return fechaSalida;
+    public String getArea() {
+        return area;
     }
 
-    public void setFechaSalida(Date fechaSalida) {
-        this.fechaSalida = fechaSalida;
+    public void setArea(String area) {
+        this.area = area;
     }
 
-    public String getHoraSalida() {
-        return horaSalida;
+    public String getFechaIngreso() {
+        return fechaIngreso;
     }
 
-    public void setHoraSalida(String horaSalida) {
-        this.horaSalida = horaSalida;
+    public void setFechaIngreso(String fechaIngreso) {
+        this.fechaIngreso = fechaIngreso;
     }
 
-    public TipoMicromovilidad getTipoMicromovilidad() {
+    public String getHoraIngreso() {
+        return horaIngreso;
+    }
+
+    public void setHoraIngreso(String horaIngreso) {
+        this.horaIngreso = horaIngreso;
+    }
+
+    public String getTipoMicromovilidad() {
         return tipoMicromovilidad;
     }
 
-    public void setTipoMicromovilidad(TipoMicromovilidad tipoMicromovilidad) {
+    public void setTipoMicromovilidad(String tipoMicromovilidad) {
         this.tipoMicromovilidad = tipoMicromovilidad;
     }
 }
