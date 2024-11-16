@@ -1,12 +1,8 @@
 package com.example.proyecto_shem.entity;
 
-import android.os.Build;
-
 import java.io.Serializable;
-import java.time.LocalTime;
-import java.util.Date;
 
-public class Permiso implements Serializable {
+public class PermisoIngreso implements Serializable {
 
     private int idPermiso;
     private String usuario;

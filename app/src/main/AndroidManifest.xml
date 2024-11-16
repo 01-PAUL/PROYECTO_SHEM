@@ -17,6 +17,9 @@
             android:name=".vista.DetallePermisoIngresoActivity"
             android:exported="false" />
         <activity
+            android:name=".vista.DetallePermisoSalidaActivity"
+            android:exported="false" />
+        <activity
             android:name=".vista.HistorialSalidaActivity"
             android:exported="false" />
         <activity

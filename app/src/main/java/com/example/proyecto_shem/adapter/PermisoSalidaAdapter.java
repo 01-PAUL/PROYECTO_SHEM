@@ -15,17 +15,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.proyecto_shem.R;
-import com.example.proyecto_shem.entity.PermisoIngreso;
-import com.example.proyecto_shem.vista.DetallePermisoIngresoActivity;
+import com.example.proyecto_shem.entity.PermisoSalida;
+import com.example.proyecto_shem.vista.DetallePermisoSalidaActivity;
 
 import java.util.ArrayList;
 
-public class PermisoIngresoAdapter extends RecyclerView.Adapter<PermisoIngresoAdapter.MyViewHolder> {
+public class PermisoSalidaAdapter extends RecyclerView.Adapter<PermisoSalidaAdapter.MyViewHolder> {
 
     Context context;
-    ArrayList<PermisoIngreso> list;
+    ArrayList<PermisoSalida> list;
 
-    public PermisoIngresoAdapter(Context context, ArrayList<PermisoIngreso> list) {
+    public PermisoSalidaAdapter(Context context, ArrayList<PermisoSalida> list) {
         this.context = context;
         this.list = list;
     }
@@ -43,7 +43,7 @@ public class PermisoIngresoAdapter extends RecyclerView.Adapter<PermisoIngresoAd
         holder.cardView.setAnimation(AnimationUtils.loadAnimation(context, R.anim.fade_transition));
 
         // Obtener el permiso correspondiente a la posición
-        PermisoIngreso permiso = list.get(position);
+        PermisoSalida permiso = list.get(position);
 
         // Cargar los datos del permiso en las vistas
         Glide.with(context).load(permiso.getImageUrl()).into(holder.ImaImageUrl);
@@ -54,15 +54,15 @@ public class PermisoIngresoAdapter extends RecyclerView.Adapter<PermisoIngresoAd
 
         // Configurar el click para ver los detalles del permiso
         holder.cardView.setOnClickListener(v -> {
-            Intent intent = new Intent(context, DetallePermisoIngresoActivity.class);
+            Intent intent = new Intent(context, DetallePermisoSalidaActivity.class);
             // Pasar todos los datos necesarios a la actividad de detalles
             intent.putExtra("imageUrl", permiso.getImageUrl());
             intent.putExtra("usuario", permiso.getUsuario());
             intent.putExtra("motivo", permiso.getDetallePermiso());
-            intent.putExtra("tipoMicromovilidad", permiso.getTipoMicromovilidad());
+            intent.putExtra("micromovilidad", permiso.getMicromovilidad());
             intent.putExtra("area", permiso.getArea());
-            intent.putExtra("fechaIngreso", permiso.getFechaIngreso());
-            intent.putExtra("horaIngreso", permiso.getHoraIngreso());
+            intent.putExtra("fechaSalida", permiso.getFechaSalida());
+            intent.putExtra("horaSalida", permiso.getHoraSalida());
 
             context.startActivity(intent);
         });

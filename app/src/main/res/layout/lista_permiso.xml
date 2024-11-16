@@ -23,7 +23,7 @@
 
             <ImageView
                 android:id="@+id/imageUrl"
-                android:layout_width="55dp"
+                android:layout_width="60dp"
                 android:layout_height="65dp"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentLeft="true"
@@ -46,7 +46,7 @@
                 <TextView
                     android:id="@+id/usuario"
                     android:layout_width="230dp"
-                    android:layout_height="36dp"
+                    android:layout_height="30dp"
                     android:layout_marginBottom="4dp"
                     android:text="nombre"
                     android:textColor="@android:color/black"
@@ -58,21 +58,23 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="motivo"
-                    android:textSize="16sp" />
+                    android:textSize="17sp"
+                    />
 
             </LinearLayout>
 
+
             <TextView
-                android:id="@+id/tipoMicromovilidad"
+                android:id="@+id/area"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:layout_centerInParent="true"
-                android:layout_marginEnd="3dp"
+                android:layout_marginEnd="20dp"
                 android:layout_marginRight="6dp"
-                android:text="bicicleta"
-                android:textSize="17sp"
+                android:text="reclamo"
+                android:textSize="18sp"
                 android:textStyle="bold" />
 
         </RelativeLayout>

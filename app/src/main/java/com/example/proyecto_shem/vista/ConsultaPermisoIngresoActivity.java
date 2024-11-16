@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.proyecto_shem.R;
 import com.example.proyecto_shem.adapter.PermisoIngresoAdapter;
-import com.example.proyecto_shem.entity.Permiso;
+import com.example.proyecto_shem.entity.PermisoIngreso;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -34,8 +34,8 @@ public class ConsultaPermisoIngresoActivity extends AppCompatActivity {
     private DatabaseReference databaseReference;
     private RecyclerView recyclerView;
     private PermisoIngresoAdapter permisoIngresoAdapter;
-    private ArrayList<Permiso> list;
-    private ArrayList<Permiso> listOriginal; // Lista para mantener todos los registros
+    private ArrayList<PermisoIngreso> list;
+    private ArrayList<PermisoIngreso> listOriginal; // Lista para mantener todos los registros
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,15 +124,15 @@ public class ConsultaPermisoIngresoActivity extends AppCompatActivity {
 
     private void mostrarUltimosRegistrosDeUsuarios() {
         // Eliminar registros duplicados, manteniendo solo el más reciente por usuario
-        Map<String, Permiso> registroRecientePorUsuario = new HashMap<>();
+        Map<String, PermisoIngreso> registroRecientePorUsuario = new HashMap<>();
 
-        for (Permiso permiso : listOriginal) {
+        for (PermisoIngreso permiso : listOriginal) {
             String usuario = permiso.getUsuario();
             // Verifica si el usuario ya existe, si no, agrégalo con el permiso
             if (!registroRecientePorUsuario.containsKey(usuario)) {
                 registroRecientePorUsuario.put(usuario, permiso);
             } else {
-                Permiso registroExistente = registroRecientePorUsuario.get(usuario);
+                PermisoIngreso registroExistente = registroRecientePorUsuario.get(usuario);
                 int comparacionFecha = permiso.getFechaIngreso().compareTo(registroExistente.getFechaIngreso());
 
                 // Si la fecha es más reciente, actualiza el registro
@@ -149,7 +149,7 @@ public class ConsultaPermisoIngresoActivity extends AppCompatActivity {
         }
 
         // Actualizar la lista con solo el último registro por usuario
-        ArrayList<Permiso> ultimosRegistros = new ArrayList<>(registroRecientePorUsuario.values());
+        ArrayList<PermisoIngreso> ultimosRegistros = new ArrayList<>(registroRecientePorUsuario.values());
 
         // Actualizar RecyclerView con los datos filtrados
         list.clear();
@@ -166,24 +166,24 @@ public class ConsultaPermisoIngresoActivity extends AppCompatActivity {
 
     private void filtrarPorArea(String selectedArea) {
         // Filtrar los registros por el área seleccionada
-        ArrayList<Permiso> registrosFiltrados = new ArrayList<>();
+        ArrayList<PermisoIngreso> registrosFiltrados = new ArrayList<>();
 
-        for (Permiso permiso : listOriginal) {
+        for (PermisoIngreso permiso : listOriginal) {
             if (permiso.getArea() != null && permiso.getArea().equals(selectedArea)) {
                 registrosFiltrados.add(permiso);
             }
         }
 
         // Eliminar registros duplicados, manteniendo solo el más reciente por usuario
-        Map<String, Permiso> registroRecientePorUsuario = new HashMap<>();
+        Map<String, PermisoIngreso> registroRecientePorUsuario = new HashMap<>();
 
-        for (Permiso permiso : registrosFiltrados) {
+        for (PermisoIngreso permiso : registrosFiltrados) {
             String usuario = permiso.getUsuario();
             // Verifica si el usuario ya existe, si no, agrégalo con el permiso
             if (!registroRecientePorUsuario.containsKey(usuario)) {
                 registroRecientePorUsuario.put(usuario, permiso);
             } else {
-                Permiso registroExistente = registroRecientePorUsuario.get(usuario);
+                PermisoIngreso registroExistente = registroRecientePorUsuario.get(usuario);
                 int comparacionFecha = permiso.getFechaIngreso().compareTo(registroExistente.getFechaIngreso());
 
                 // Si la fecha es más reciente, actualiza el registro
@@ -200,7 +200,7 @@ public class ConsultaPermisoIngresoActivity extends AppCompatActivity {
         }
 
         // Actualizar la lista con solo el último registro por usuario
-        ArrayList<Permiso> ultimosRegistros = new ArrayList<>(registroRecientePorUsuario.values());
+        ArrayList<PermisoIngreso> ultimosRegistros = new ArrayList<>(registroRecientePorUsuario.values());
 
         // Si no hay registros para mostrar, mostrar mensaje de error
         if (ultimosRegistros.isEmpty()) {
@@ -231,7 +231,7 @@ public class ConsultaPermisoIngresoActivity extends AppCompatActivity {
                 listOriginal.clear(); // Limpiar ambas listas
 
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    Permiso permiso = dataSnapshot.getValue(Permiso.class);
+                    PermisoIngreso permiso = dataSnapshot.getValue(PermisoIngreso.class);
                     list.add(permiso);
                     listOriginal.add(permiso); // Guardar los registros originales
                 }
