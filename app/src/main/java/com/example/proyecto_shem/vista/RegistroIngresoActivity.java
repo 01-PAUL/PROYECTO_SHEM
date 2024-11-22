@@ -556,7 +556,7 @@ public class RegistroIngresoActivity extends AppCompatActivity {
                 } else {
                     // Si no encuentra en ninguna tabla
                     Toast.makeText(RegistroIngresoActivity.this, "Número de Documento no válido", Toast.LENGTH_SHORT).show();
-
+                    clearInputs();
                 }
             }
 
@@ -665,14 +665,19 @@ public class RegistroIngresoActivity extends AppCompatActivity {
 
     private boolean validarCampos() {
         String numDocumento = txtNumeroDocumento.getText().toString();
-        if (!numDocumento.isEmpty()) {
-            if (numDocumento.length() != 8 || !numDocumento.matches("\\d+")) {
-                Toast.makeText(this, "El número de documento debe tener 8 dígitos", Toast.LENGTH_SHORT).show();
-                return false;
-            }
-        }
 
-        return true;
+        if (!numDocumento.isEmpty()) {
+            // Verificar si tiene 8 o 11 dígitos
+            if (numDocumento.matches("\\d{8}") || numDocumento.matches("\\d{11}")) {
+                return true; // Número válido
+            } else {
+                Toast.makeText(this, "El número de documento debe tener 8 o 11 dígitos", Toast.LENGTH_SHORT).show();
+                return false; // Número inválido
+            }
+        } else {
+            Toast.makeText(this, "El campo de documento no puede estar vacío", Toast.LENGTH_SHORT).show();
+            return false; // Campo vacío
+        }
     }
 
     //MENSAJE REGISTRADO

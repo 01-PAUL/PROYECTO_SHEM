@@ -321,6 +321,7 @@ public class RegistroPermisoActivity extends AppCompatActivity {
                 } else {
                     // Mostrar mensaje si no se encontró en ninguna de las tablas
                     Toast.makeText(RegistroPermisoActivity.this, "N° de documento no existe", Toast.LENGTH_SHORT).show();
+                    clearInputs();
                 }
             }
             @Override

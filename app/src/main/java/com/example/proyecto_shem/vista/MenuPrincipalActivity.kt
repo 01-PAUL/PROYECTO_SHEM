@@ -5,6 +5,7 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Handler
 import android.view.MenuItem
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
@@ -15,11 +16,15 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.example.proyecto_shem.R
 import com.google.android.material.navigation.NavigationView
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class MenuPrincipalActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var drawer: DrawerLayout
     private lateinit var toggle: ActionBarDrawerToggle
 
+    private lateinit var timeText: TextView
     private val INACTIVITY_TIMEOUT = 600000L
     private val handler = Handler()
     private val inactivityRunnable = Runnable {
@@ -33,6 +38,9 @@ class MenuPrincipalActivity : AppCompatActivity(), NavigationView.OnNavigationIt
 
         val toolbar: Toolbar = findViewById(R.id.toolbar_main)
         setSupportActionBar(toolbar)
+
+        // Referencia a TextView de la hora
+        timeText = findViewById(R.id.timeText)
 
         resetInactivityTimer()
 
@@ -64,6 +72,21 @@ class MenuPrincipalActivity : AppCompatActivity(), NavigationView.OnNavigationIt
 
         val navigationView: NavigationView = findViewById(R.id.nav_view)
         navigationView.setNavigationItemSelectedListener(this)
+
+        // Iniciar actualización periódica de la hora
+        startClockUpdate()
+    }
+
+    private fun startClockUpdate() {
+        val runnable = object : Runnable {
+            override fun run() {
+                val sdf = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
+                val currentTime = sdf.format(Date())
+                timeText.text = currentTime
+                handler.postDelayed(this, 1000)  // Actualiza cada segundo
+            }
+        }
+        handler.post(runnable)
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
