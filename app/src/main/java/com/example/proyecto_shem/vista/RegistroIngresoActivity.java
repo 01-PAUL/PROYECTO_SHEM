@@ -4,12 +4,14 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.content.Intent;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -40,14 +42,16 @@ import java.util.Map;
 
 public class RegistroIngresoActivity extends AppCompatActivity {
 
-    TextView txtCodigoUsuario, txtNumeroDocumento, txtUsuario, txtAutorizacion;
+    TextView txtUsuario, txtAutorizacion;
     Spinner spinnerTipoUsuario, spinnerTipoDocumento, spinnerMicromovilidad;
     Button btnEscanearQR, btnConsultar, btnIngreso, btnRegresar;
     ImageView imgView;
+    EditText txtNumeroDocumento, txtCodigoUsuario;
 
     private DatabaseReference databaseReference;
     private Map<Integer, String> tipoUsuarioMap;
     private Map<Integer, String> tipoDocumentoMap;
+    boolean isInternalChange = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,6 +120,122 @@ public class RegistroIngresoActivity extends AppCompatActivity {
             }
         });
 
+        txtNumeroDocumento.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // No es necesario implementar
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // No es necesario implementar
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String input = s.toString();
+                // Verificar si hay caracteres no numéricos
+                if (!input.matches("\\d*")) {
+                    txtNumeroDocumento.removeTextChangedListener(this); // Evitar bucles
+                    // Eliminar caracteres no numéricos
+                    txtNumeroDocumento.setText(input.replaceAll("[^\\d]", ""));
+                    txtNumeroDocumento.setSelection(txtNumeroDocumento.getText().length()); // Mover el cursor al final
+                    txtNumeroDocumento.addTextChangedListener(this);
+                }
+            }
+        });
+
+        spinnerTipoDocumento.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String tipoDocumento = spinnerTipoDocumento.getSelectedItem().toString();
+                String numDocumento = txtNumeroDocumento.getText().toString();
+
+                if (tipoDocumento.equals("DNI")) {
+                    // Limitar la longitud a 8 caracteres
+                    txtNumeroDocumento.setFilters(new InputFilter[]{new InputFilter.LengthFilter(8)});
+                    // Si el número actual tiene más de 8 caracteres, recortar
+                    if (numDocumento.length() > 8) {
+                        txtNumeroDocumento.setText(numDocumento.substring(0, 8));
+                        txtNumeroDocumento.setSelection(8); // Coloca el cursor al final
+                    }
+                } else if (tipoDocumento.equals("Carnet Ext.")) {
+                    // Limitar la longitud a 11 caracteres
+                    txtNumeroDocumento.setFilters(new InputFilter[]{new InputFilter.LengthFilter(11)});
+                } else {
+                    // Si no se selecciona un tipo, dejar la longitud máxima en 11
+                    txtNumeroDocumento.setFilters(new InputFilter[]{new InputFilter.LengthFilter(11)});
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // No se seleccionó nada, permitir por defecto hasta 11 caracteres
+                txtNumeroDocumento.setFilters(new InputFilter[]{new InputFilter.LengthFilter(11)});
+            }
+        });
+
+        txtCodigoUsuario.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // No es necesario implementar
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // No es necesario implementar
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (isInternalChange) return; // Ignorar cambios internos
+                isInternalChange = true;
+
+                String input = s.toString();
+                if (!input.isEmpty() && input.charAt(0) == ' ') {
+                    // Eliminar espacios iniciales
+                    txtCodigoUsuario.setText(input.trim());
+                    txtCodigoUsuario.setSelection(txtCodigoUsuario.getText().length());
+                } else {
+                    // Limitar la longitud máxima
+                    txtCodigoUsuario.setFilters(new InputFilter[]{new InputFilter.LengthFilter(10)});
+                }
+
+                isInternalChange = false;
+            }
+        });
+
+        spinnerTipoUsuario.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String tipoUsuario = spinnerTipoUsuario.getSelectedItem().toString();
+
+                if (tipoUsuario.equals("Seleccione:")) {
+                    // Restablecer el campo si se selecciona "Seleccione"
+                    txtCodigoUsuario.setText("");
+                    txtCodigoUsuario.setFilters(new InputFilter[]{new InputFilter.LengthFilter(10)});
+                    return; // Salir para evitar operaciones adicionales
+                }
+
+                String codigoUsuarioActual = txtCodigoUsuario.getText().toString();
+                if (!codigoUsuarioActual.isEmpty()) {
+                    // Obtener la letra inicial correcta según el tipo
+                    char letraInicial = getLetraInicial(tipoUsuario,
+                            Character.isLowerCase(codigoUsuarioActual.charAt(0)));
+                    // Actualizar el texto del código usuario
+                    String nuevoCodigo = letraInicial + codigoUsuarioActual.substring(1);
+                    txtCodigoUsuario.setText(nuevoCodigo);
+                    txtCodigoUsuario.setSelection(nuevoCodigo.length()); // Mover el cursor al final
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Comportamiento por defecto si nada está seleccionado
+                txtCodigoUsuario.setFilters(new InputFilter[]{new InputFilter.LengthFilter(10)});
+            }
+        });
+
         btnEscanearQR.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -141,22 +261,24 @@ public class RegistroIngresoActivity extends AppCompatActivity {
                     txtCodigoUsuario.setText(codUsuario);
                     txtNumeroDocumento.setText(numDocumento);
 
-                    String codUsuarioPattern = "^[a-zA-Z]\\d{9}$";
-
-                    // Validar si ambos campos están vacíos o contienen solo espacios
+                    // Validación para el Código Usuario
                     if (codUsuario.isEmpty() && numDocumento.isEmpty()) {
-                        Toast.makeText(RegistroIngresoActivity.this, "Ingrese el Codigo Usuario o N° Documento", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RegistroIngresoActivity.this, "Ingrese el Código Usuario o N° Documento", Toast.LENGTH_SHORT).show();
                     } else {
-                        // Si el campo de codUsuario no está vacío, verificar su formato
                         if (!codUsuario.isEmpty()) {
-                            if (codUsuario.matches(codUsuarioPattern)) {
-                                consultarUsuario(codUsuario);
+                            // Primero, verificar que el código tiene una letra seguida de 9 números
+                            if (!codUsuario.matches("^[a-zA-Z]\\d{9}$")) {
+                                Toast.makeText(RegistroIngresoActivity.this, "Formato de Código debe tener una letra y 9 números", Toast.LENGTH_SHORT).show();
                             } else {
-                                // Mostrar mensaje de error si el formato no es válido
-                                Toast.makeText(RegistroIngresoActivity.this, "Formato de Código Usuario no válido", Toast.LENGTH_SHORT).show();
-                                clearInputs(); // Limpiar todos los campos si el formato es incorrecto
+                                // Luego, verificar que la letra inicial sea 'I', 'P' o 'A'
+                                if (!codUsuario.matches("^[IiPpAa].*")) {
+                                    Toast.makeText(RegistroIngresoActivity.this, "Formato solo se permiten I, P, A como letra inicial", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    // Si todo es válido, llamar a la función para consultar el usuario
+                                    consultarUsuario(codUsuario);
+                                }
                             }
-                        } else if (!numDocumento.isEmpty()) {
+                        } else if (!numDocumento.isEmpty() && numDocumento.matches("\\d+")) {
                             consultarDocumento(numDocumento);
                         }
                     }
@@ -175,14 +297,45 @@ public class RegistroIngresoActivity extends AppCompatActivity {
             }
         });
 
-
-
         btnRegresar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
+    }
+
+    private String getCodigoUsuarioRegex(String tipoUsuario) {
+        switch (tipoUsuario) {
+            case "Estudiante":
+                return "^[Ii]\\d{0,9}$"; // Una 'I' o 'i' seguida de hasta 9 dígitos
+            case "Docente":
+                return "^[Pp]\\d{0,9}$"; // Una 'P' o 'p' seguida de hasta 9 dígitos
+            case "Personal Administrativo":
+                return "^[Aa]\\d{0,9}$"; // Una 'A' o 'a' seguida de hasta 9 dígitos
+            default:
+                return "^[IiPpAa]\\d{0,9}$"; // 'I', 'P', o 'A' seguida de hasta 9 dígitos
+        }
+    }
+
+    private char getLetraInicial(String tipoUsuario, boolean esMinuscula) {
+        char letra = ' ';
+        switch (tipoUsuario) {
+            case "Estudiante":
+                letra = 'I';
+                break;
+            case "Docente":
+                letra = 'P';
+                break;
+            case "Personal Administrativo":
+                letra = 'A';
+                break;
+            default:
+                letra = ' ';
+        }
+
+        // Convertir a minúscula si el campo actual está en minúscula
+        return esMinuscula ? Character.toLowerCase(letra) : letra;
     }
 
     private void registrarIngreso(String codigoUsuario) {
@@ -664,21 +817,61 @@ public class RegistroIngresoActivity extends AppCompatActivity {
     }
 
     private boolean validarCampos() {
-        String numDocumento = txtNumeroDocumento.getText().toString();
+        String tipoUsuario = spinnerTipoUsuario.getSelectedItem() != null
+                ? spinnerTipoUsuario.getSelectedItem().toString()
+                : "";
+        String codUsuario = txtCodigoUsuario.getText().toString().trim();
+        String numDocumento = txtNumeroDocumento.getText().toString().trim();
 
-        if (!numDocumento.isEmpty()) {
-            // Verificar si tiene 8 o 11 dígitos
-            if (numDocumento.matches("\\d{8}") || numDocumento.matches("\\d{11}")) {
-                return true; // Número válido
+        // Validar Código Usuario
+        if (!codUsuario.isEmpty()) {
+            // Verificar que tiene exactamente una letra inicial seguida de 9 números
+            if (!codUsuario.matches("^[a-zA-ZÑñ]\\d{9}$")) {
+                // Si no cumple con la estructura general
+                Toast.makeText(this, "Formato de Código debe tener una letra y 9 números", Toast.LENGTH_SHORT).show();
+                return false;
             } else {
-                Toast.makeText(this, "El número de documento debe tener 8 o 11 dígitos", Toast.LENGTH_SHORT).show();
-                return false; // Número inválido
+                // Verificar la letra inicial según el tipo de usuario
+                if (tipoUsuario.equals("Estudiante") && !codUsuario.matches("^[Ii].*")) {
+                    Toast.makeText(this, "Estudiante debe tener inicial I o i", Toast.LENGTH_SHORT).show();
+                    return false;
+                } else if (tipoUsuario.equals("Docente") && !codUsuario.matches("^[Pp].*")) {
+                    Toast.makeText(this, "Docente debe tener inicial P o p", Toast.LENGTH_SHORT).show();
+                    return false;
+                } else if (tipoUsuario.equals("Personal Administrativo") && !codUsuario.matches("^[Aa].*")) {
+                    Toast.makeText(this, "Personal Administrativo debe tener inicial A o a", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
             }
-        } else {
-            Toast.makeText(this, "El campo de documento no puede estar vacío", Toast.LENGTH_SHORT).show();
-            return false; // Campo vacío
         }
+
+        // Validar Número de Documento
+        String tipoDocumento = spinnerTipoDocumento.getSelectedItem() != null
+                ? spinnerTipoDocumento.getSelectedItem().toString()
+                : "";
+
+        if (!numDocumento.isEmpty() && numDocumento.matches("\\d+")) {
+            if (numDocumento.matches("0+")) {
+                Toast.makeText(this, "El número de documento no puede ser solo ceros", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+
+            if (tipoDocumento.equals("DNI") && !numDocumento.matches("\\d{8}")) {
+                Toast.makeText(this, "El DNI debe tener 8 dígitos", Toast.LENGTH_SHORT).show();
+                return false;
+            } else if (tipoDocumento.equals("Carnet Ext.") && !numDocumento.matches("\\d{11}")) {
+                Toast.makeText(this, "El Carnet de Extranjería debe tener 11 dígitos", Toast.LENGTH_SHORT).show();
+                return false;
+            } else if (!tipoDocumento.equals("DNI") && !tipoDocumento.equals("Carnet Ext.")
+                    && !(numDocumento.matches("\\d{8}") || numDocumento.matches("\\d{11}"))) {
+                Toast.makeText(this, "El número de documento debe tener 8 o 11 dígitos", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        }
+
+        return true;
     }
+
 
     //MENSAJE REGISTRADO
     private void showSuccessDialog(String usuario, String tipoMicromovilidad) {

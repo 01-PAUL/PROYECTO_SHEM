@@ -3,10 +3,13 @@ package com.example.proyecto_shem.vista;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -36,10 +39,11 @@ import java.util.Map;
 
     public class RegistroPermisoSalidaActivity extends AppCompatActivity {
 
-        TextView txtNumeroDocumento, txtUsuario, txtArea, txtDetalle, txtMicromovilidad;
+        TextView txtUsuario, txtArea, txtDetalle, txtMicromovilidad;
         Spinner spinnerTipoDocumento;
         Button btnConsultar, btnRegistrar, btnRegresar;
         ImageView imgView;
+        EditText txtNumeroDocumento;
 
     private DatabaseReference databaseReference;
     private Map<Integer, String> tipoDocumentoMap;
@@ -93,6 +97,61 @@ import java.util.Map;
 
             @Override
             public void afterTextChanged(Editable s) {
+            }
+        });
+
+        txtNumeroDocumento.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // No es necesario implementar
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // No es necesario implementar
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String input = s.toString();
+                // Verificar si hay caracteres no numéricos
+                if (!input.matches("\\d*")) {
+                    txtNumeroDocumento.removeTextChangedListener(this); // Evitar bucles
+                    // Eliminar caracteres no numéricos
+                    txtNumeroDocumento.setText(input.replaceAll("[^\\d]", ""));
+                    txtNumeroDocumento.setSelection(txtNumeroDocumento.getText().length()); // Mover el cursor al final
+                    txtNumeroDocumento.addTextChangedListener(this);
+                }
+            }
+        });
+
+        spinnerTipoDocumento.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String tipoDocumento = spinnerTipoDocumento.getSelectedItem().toString();
+                String numDocumento = txtNumeroDocumento.getText().toString();
+
+                if (tipoDocumento.equals("DNI")) {
+                    // Limitar la longitud a 8 caracteres
+                    txtNumeroDocumento.setFilters(new InputFilter[]{new InputFilter.LengthFilter(8)});
+                    // Si el número actual tiene más de 8 caracteres, recortar
+                    if (numDocumento.length() > 8) {
+                        txtNumeroDocumento.setText(numDocumento.substring(0, 8));
+                        txtNumeroDocumento.setSelection(8); // Coloca el cursor al final
+                    }
+                } else if (tipoDocumento.equals("Carnet Ext.")) {
+                    // Limitar la longitud a 11 caracteres
+                    txtNumeroDocumento.setFilters(new InputFilter[]{new InputFilter.LengthFilter(11)});
+                } else {
+                    // Si no se selecciona un tipo, dejar la longitud máxima en 11
+                    txtNumeroDocumento.setFilters(new InputFilter[]{new InputFilter.LengthFilter(11)});
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // No se seleccionó nada, permitir por defecto hasta 11 caracteres
+                txtNumeroDocumento.setFilters(new InputFilter[]{new InputFilter.LengthFilter(11)});
             }
         });
 
@@ -369,22 +428,6 @@ import java.util.Map;
         });
     }
 
-        private boolean validarCampos() {
-            String numDocumento = txtNumeroDocumento.getText().toString();
-
-            if (!numDocumento.isEmpty()) {
-                // Verificar si tiene 8 o 11 dígitos
-                if (numDocumento.matches("\\d{8}") || numDocumento.matches("\\d{11}")) {
-                    return true; // Número válido
-                } else {
-                    Toast.makeText(this, "El número de documento debe tener 8 o 11 dígitos", Toast.LENGTH_SHORT).show();
-                    return false; // Número inválido
-                }
-            } else {
-                Toast.makeText(this, "El campo de documento no puede estar vacío", Toast.LENGTH_SHORT).show();
-                return false; // Campo vacío
-            }
-        }
 
     //VALIDACIONES
     private boolean validateInputs() {
@@ -424,7 +467,46 @@ import java.util.Map;
         return true;
     }
 
-    //MENSAJE DE SALIDA
+        private boolean validarCampos() {
+            String tipoDocumento = spinnerTipoDocumento.getSelectedItem().toString();
+            String numDocumento = txtNumeroDocumento.getText().toString().trim();
+
+            // Validación si el campo de documento está vacío
+            if (numDocumento.isEmpty()) {
+                Toast.makeText(this, "El campo de documento no puede estar vacío", Toast.LENGTH_SHORT).show();
+                return false; // Retorna false si el campo está vacío
+            }
+
+            // Validación para evitar números compuestos únicamente de ceros
+            if (numDocumento.matches("0+")) {
+                Toast.makeText(this, "El número de documento no puede ser solo ceros", Toast.LENGTH_SHORT).show();
+                return false; // Retorna false si el número es solo ceros
+            }
+
+            // Validación del número de documento según el tipo seleccionado
+            if (tipoDocumento.equals("DNI")) {
+                if (!numDocumento.matches("\\d{8}")) {
+                    Toast.makeText(this, "El DNI debe tener 8 dígitos", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+            } else if (tipoDocumento.equals("Carnet Ext.")) {
+                if (!numDocumento.matches("\\d{11}")) {
+                    Toast.makeText(this, "El Carnet de Extranjería debe tener 11 dígitos", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+            } else {
+                // Si no se selecciona un tipo, validar que sea 8 o 11 dígitos
+                if (!(numDocumento.matches("\\d{8}") || numDocumento.matches("\\d{11}"))) {
+                    Toast.makeText(this, "El número de documento debe tener 8 o 11 dígitos", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+            }
+
+            return true; // Si pasa todas las validaciones, retorna true
+        }
+
+
+        //MENSAJE DE SALIDA
     private void showSuccessDialog(String usuario, String tipoMicromovilidad) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("SALIDA REGISTRADA DE FORMA EXITOSA!!!!");

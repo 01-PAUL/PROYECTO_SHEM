@@ -3,10 +3,13 @@ package com.example.proyecto_shem.vista;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -32,10 +35,11 @@ import java.util.Map;
 
 public class RegistroPermisoActivity extends AppCompatActivity {
 
-    TextView txtNumeroDocumento, txtUsuario, txtGenero, txtFechNacim, txtDetalle;
+    TextView txtUsuario, txtGenero, txtFechNacim;
     Spinner spinnerTipoDocumento, spinnerArea, spinnerMicromovilidad;
     Button btnConsultar, btnRegistrar, btnRegresar;
     ImageView imgView;
+    EditText txtDetalle, txtNumeroDocumento;
 
     private DatabaseReference databaseReference;
     private Map<Integer, String> tipoDocumentoMap;
@@ -92,12 +96,99 @@ public class RegistroPermisoActivity extends AppCompatActivity {
             }
         });
 
+        txtDetalle.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // No se necesita implementar
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // No se necesita implementar
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // Obtén el texto actual
+                String text = s.toString();
+
+                // Validar que no empiece con espacios y que permita espacios luego de letras
+                if (!text.matches("^[a-zA-ZáéíóúÁÉÍÓÚñÑ]+( [a-zA-ZáéíóúÁÉÍÓÚñÑ]*)*$")) {
+                    // Limpia espacios iniciales y múltiples espacios consecutivos
+                    String cleanedText = text.replaceAll("^\\s+", "") // Elimina espacios iniciales
+                            .replaceAll("\\s{2,}", " "); // Reemplaza múltiples espacios por uno
+
+                    // Actualiza el texto del campo
+                    txtDetalle.removeTextChangedListener(this); // Evita el bucle infinito
+                    txtDetalle.setText(cleanedText);
+                    txtDetalle.setSelection(cleanedText.length()); // Mantén el cursor al final del texto
+                    txtDetalle.addTextChangedListener(this);
+                }
+            }
+        });
+
+        txtNumeroDocumento.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // No es necesario implementar
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // No es necesario implementar
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String input = s.toString();
+                // Verificar si hay caracteres no numéricos
+                if (!input.matches("\\d*")) {
+                    txtNumeroDocumento.removeTextChangedListener(this); // Evitar bucles
+                    // Eliminar caracteres no numéricos
+                    txtNumeroDocumento.setText(input.replaceAll("[^\\d]", ""));
+                    txtNumeroDocumento.setSelection(txtNumeroDocumento.getText().length());
+                    txtNumeroDocumento.addTextChangedListener(this);
+                }
+            }
+        });
+
+        spinnerTipoDocumento.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String tipoDocumento = spinnerTipoDocumento.getSelectedItem().toString();
+                String numDocumento = txtNumeroDocumento.getText().toString();
+
+                if (tipoDocumento.equals("DNI")) {
+                    // Limitar la longitud a 8 caracteres
+                    txtNumeroDocumento.setFilters(new InputFilter[]{new InputFilter.LengthFilter(8)});
+                    // Si el número actual tiene más de 8 caracteres, recortar
+                    if (numDocumento.length() > 8) {
+                        txtNumeroDocumento.setText(numDocumento.substring(0, 8));
+                        txtNumeroDocumento.setSelection(8); // Coloca el cursor al final
+                    }
+                } else if (tipoDocumento.equals("Carnet Ext.")) {
+                    // Limitar la longitud a 11 caracteres
+                    txtNumeroDocumento.setFilters(new InputFilter[]{new InputFilter.LengthFilter(11)});
+                } else {
+                    // Si no se selecciona un tipo, dejar la longitud máxima en 11
+                    txtNumeroDocumento.setFilters(new InputFilter[]{new InputFilter.LengthFilter(11)});
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // No se seleccionó nada, permitir por defecto hasta 11 caracteres
+                txtNumeroDocumento.setFilters(new InputFilter[]{new InputFilter.LengthFilter(11)});
+            }
+        });
+
         // Configuración de botones
         btnRegresar.setOnClickListener(v -> finish());
 
         btnConsultar.setOnClickListener(v -> {
             if (validarCampos()) {
-                String numDocumento = txtNumeroDocumento.getText().toString().trim();;
+                String numDocumento = txtNumeroDocumento.getText().toString().trim();
+
                 if (numDocumento.isEmpty()) {
                     Toast.makeText(RegistroPermisoActivity.this, "Ingrese el N° Documento", Toast.LENGTH_SHORT).show();
                 } else {
@@ -117,38 +208,39 @@ public class RegistroPermisoActivity extends AppCompatActivity {
 
                     // Verificar si el usuario ya existe en la tabla Ingreso
                     databaseReference.child("Permiso Ingreso")
-                    .orderByChild("numDocumento")
-                    .equalTo(numDocumento)
-                    .addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            if (dataSnapshot.exists()) {
-                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                    String estado = snapshot.child("estado").getValue(String.class);
+                            .orderByChild("numDocumento")
+                            .equalTo(numDocumento)
+                            .addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    if (dataSnapshot.exists()) {
+                                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                            String estado = snapshot.child("estado").getValue(String.class);
 
-                                    if ("inactivo".equals(estado)) {
-                                        // El usuario puede volver a ingresar
-                                        registrarPermiso(numDocumento);
+                                            if ("inactivo".equals(estado)) {
+                                                // El usuario puede volver a ingresar
+                                                registrarPermiso(numDocumento);
+                                            } else {
+                                                // Usuario aún está activo en la tabla Ingreso
+                                                // El usuario ya ingresó, mostrar mensaje
+                                                Toast.makeText(RegistroPermisoActivity.this, "Usuario ya ingresó a Cibertec", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
                                     } else {
-                                        // Usuario aún está activo en la tabla Ingreso
-                                        // El usuario ya ingresó, mostrar mensaje
-                                        Toast.makeText(RegistroPermisoActivity.this, "Usuario ya ingresó a Cibertec", Toast.LENGTH_SHORT).show();
+                                        // El usuario no existe, registrar datos
+                                        registrarPermiso(numDocumento); // Pasar el código en minúsculas
                                     }
                                 }
-                            } else {
-                                // El usuario no existe, registrar datos
-                                registrarPermiso(numDocumento); // Pasar el código en minúsculas
-                            }
-                        }
 
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                            Toast.makeText(RegistroPermisoActivity.this, "Error al verificar el permiso", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+                                    Toast.makeText(RegistroPermisoActivity.this, "Error al verificar el permiso", Toast.LENGTH_SHORT).show();
+                                }
+                            });
                 }
             }
         });
+
     }
 
     private void registrarPermiso(String numDocumento) {
@@ -183,30 +275,30 @@ public class RegistroPermisoActivity extends AppCompatActivity {
         datosPermiso.put("estado", "activo"); // Añadir el campo de estado
 
         databaseReference.child("Permiso Salida")
-        .orderByChild("numeroDocumento")
-        .equalTo(numDocumento)
-        .addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    snapshot.getRef().child("estado").setValue("inactivo"); // Cambiar estado a inactivo
-                }
+                .orderByChild("numeroDocumento")
+                .equalTo(numDocumento)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            snapshot.getRef().child("estado").setValue("inactivo"); // Cambiar estado a inactivo
+                        }
 
-                databaseReference.child("Permiso Ingreso").push().setValue(datosPermiso)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        showSuccessDialog(usuario, tipoMicromovilidad);
-                    } else {
-                        Toast.makeText(RegistroPermisoActivity.this, "Error al registrar permiso", Toast.LENGTH_SHORT).show();
+                        databaseReference.child("Permiso Ingreso").push().setValue(datosPermiso)
+                                .addOnCompleteListener(task -> {
+                                    if (task.isSuccessful()) {
+                                        showSuccessDialog(usuario, tipoMicromovilidad);
+                                    } else {
+                                        Toast.makeText(RegistroPermisoActivity.this, "Error al registrar permiso", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Toast.makeText(RegistroPermisoActivity.this, "Error al verificar estado en Salida", Toast.LENGTH_SHORT).show();
                     }
                 });
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(RegistroPermisoActivity.this, "Error al verificar estado en Salida", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     private void loadSpinnerData() {
@@ -255,80 +347,81 @@ public class RegistroPermisoActivity extends AppCompatActivity {
 
         // Verificar si el usuario ya existe en la tabla Ingreso
         databaseReference.child("Permiso Ingreso")
-        .orderByChild("numeroDocumento")
-        .equalTo(numDocumentoUpper)
-        .addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                boolean usuarioActivoEncontrado = false;
+                .orderByChild("numeroDocumento")
+                .equalTo(numDocumentoUpper)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        boolean usuarioActivoEncontrado = false;
 
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    String estado = snapshot.child("estado").getValue(String.class);
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            String estado = snapshot.child("estado").getValue(String.class);
 
-                    if ("activo".equals(estado)) {
-                        usuarioActivoEncontrado = true;
-                        break;
+                            if ("activo".equals(estado)) {
+                                usuarioActivoEncontrado = true;
+                                break;
+                            }
+                        }
+
+                        if (usuarioActivoEncontrado) {
+                            // Usuario ya tiene un registro activo en "Ingreso"
+                            Toast.makeText(RegistroPermisoActivity.this, "Usuario ya ingresó a Cibertec", Toast.LENGTH_SHORT).show();
+                            clearInputs();
+                        } else {
+                            // No se encontró un registro activo, el usuario puede ingresar de nuevo
+                            consultarNumDocumento(numDocumentoUpper);
+                        }
                     }
-                }
 
-                if (usuarioActivoEncontrado) {
-                    // Usuario ya tiene un registro activo en "Ingreso"
-                    Toast.makeText(RegistroPermisoActivity.this, "Usuario ya ingresó a Cibertec", Toast.LENGTH_SHORT).show();
-                    clearInputs();
-                } else {
-                    // No se encontró un registro activo, el usuario puede ingresar de nuevo
-                    consultarNumDocumento(numDocumentoUpper);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(RegistroPermisoActivity.this, "Error al verificar el ingreso", Toast.LENGTH_SHORT).show();
-            }
-        });
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Toast.makeText(RegistroPermisoActivity.this, "Error al verificar el ingreso", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private void consultarNumDocumento(String numDocumento) {
         // Primero, intenta buscar en la tabla "estudiante"
         databaseReference.child("dni").orderByChild("numDocumento").equalTo(numDocumento)
-        .addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    // Si encuentra el usuario en "estudiante", llena los datos
-                    cargarDatosNumDocumento(dataSnapshot);
-                } else {
-                    // Si no encuentra en "estudiante", busca en "docente"
-                    buscarEnCarnetExt(numDocumento);
-                }
-            }
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            // Si encuentra el usuario en "estudiante", llena los datos
+                            cargarDatosNumDocumento(dataSnapshot);
+                        } else {
+                            // Si no encuentra en "estudiante", busca en "docente"
+                            buscarEnCarnetExt(numDocumento);
+                        }
+                    }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(RegistroPermisoActivity.this, "Error al consultar datos", Toast.LENGTH_SHORT).show();
-            }
-        });
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Toast.makeText(RegistroPermisoActivity.this, "Error al consultar datos", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private void buscarEnCarnetExt(String numDocumento) {
         databaseReference.child("carnet_ext").orderByChild("numDocumento").equalTo(numDocumento)
-        .addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    // Si encuentra el usuario en "docente", llena los datos
-                    cargarDatosNumDocumento(dataSnapshot);
-                } else {
-                    // Mostrar mensaje si no se encontró en ninguna de las tablas
-                    Toast.makeText(RegistroPermisoActivity.this, "N° de documento no existe", Toast.LENGTH_SHORT).show();
-                    clearInputs();
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(RegistroPermisoActivity.this, "Error al consultar datos", Toast.LENGTH_SHORT).show();
-            }
-        });
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            // Si encuentra el usuario en "docente", llena los datos
+                            cargarDatosNumDocumento(dataSnapshot);
+                        } else {
+                            // Mostrar mensaje si no se encontró en ninguna de las tablas
+                            Toast.makeText(RegistroPermisoActivity.this, "N° de documento no existe", Toast.LENGTH_SHORT).show();
+                            clearInputs();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Toast.makeText(RegistroPermisoActivity.this, "Error al consultar datos", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     // Método para el CONSULTAR donde cargue los datos del usuario una vez encontrado
@@ -399,28 +492,23 @@ public class RegistroPermisoActivity extends AppCompatActivity {
 
     //VALIDACIONES
     private boolean validateInputs() {
-        if (txtNumeroDocumento.getText().toString().isEmpty()) {
-            Toast.makeText(this, "Ingrese el N° Documento", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-
-        String numDocumento = txtNumeroDocumento.getText().toString();
-        if (!numDocumento.isEmpty()) {
-            if (numDocumento.length() != 8 || !numDocumento.matches("\\d+")) {
-                Toast.makeText(this, "El número de documento debe tener 8 dígitos", Toast.LENGTH_SHORT).show();
-                return false;
-            }
-        }
-
+        // Validación de otros campos como el área, detalle, etc.
         if (spinnerArea.getSelectedItemPosition() == 0) {
             Toast.makeText(this, "Seleccione un área", Toast.LENGTH_SHORT).show();
             return false;
         }
 
-        if (txtDetalle.getText().toString().trim().isEmpty()) {
-            Toast.makeText(this, "Ingrese el detalle de Permiso", Toast.LENGTH_SHORT).show();
+        if (txtDetalle.getText().toString().isEmpty()) {
+            Toast.makeText(this, "Ingrese el detalle", Toast.LENGTH_SHORT).show();
             return false;
         }
+
+        String detalle = txtDetalle.getText().toString().trim().replaceAll("\\s{2,}", " ");
+        if (detalle.isEmpty() || !detalle.matches("^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$")) {
+            Toast.makeText(this, "Ingrese un detalle válido (solo letras)", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        txtDetalle.setText(detalle); // Asegura que el texto limpio quede en el campo.
 
         if (spinnerMicromovilidad.getSelectedItemPosition() == 0) {
             Toast.makeText(this, "Seleccione un tipo de micromovilidad", Toast.LENGTH_SHORT).show();
@@ -432,22 +520,42 @@ public class RegistroPermisoActivity extends AppCompatActivity {
 
 
     private boolean validarCampos() {
-        String numDocumento = txtNumeroDocumento.getText().toString();
+        String tipoDocumento = spinnerTipoDocumento.getSelectedItem().toString();
+        String numDocumento = txtNumeroDocumento.getText().toString().trim();
 
-        if (!numDocumento.isEmpty()) {
-            // Verificar si tiene 8 o 11 dígitos
-            if (numDocumento.matches("\\d{8}") || numDocumento.matches("\\d{11}")) {
-                return true; // Número válido
-            } else {
-                Toast.makeText(this, "El número de documento debe tener 8 o 11 dígitos", Toast.LENGTH_SHORT).show();
-                return false; // Número inválido
+        // Validación si el campo de documento está vacío
+        if (numDocumento.isEmpty()) {
+            Toast.makeText(this, "El campo de documento no puede estar vacío", Toast.LENGTH_SHORT).show();
+            return false; // Retorna false si el campo está vacío
+        }
+
+        // Validación para evitar que el número sea solo ceros
+        if (numDocumento.matches("0+")) {
+            Toast.makeText(this, "El número de documento no puede ser solo ceros", Toast.LENGTH_SHORT).show();
+            return false; // Retorna false si el número es solo ceros
+        }
+
+        // Validación del número de documento según el tipo seleccionado
+        if (tipoDocumento.equals("DNI")) {
+            if (!numDocumento.matches("\\d{8}")) {
+                Toast.makeText(this, "El DNI debe tener 8 dígitos", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        } else if (tipoDocumento.equals("Carnet Ext.")) {
+            if (!numDocumento.matches("\\d{11}")) {
+                Toast.makeText(this, "El Carnet de Extranjería debe tener 11 dígitos", Toast.LENGTH_SHORT).show();
+                return false;
             }
         } else {
-            Toast.makeText(this, "El campo de documento no puede estar vacío", Toast.LENGTH_SHORT).show();
-            return false; // Campo vacío
+            // Si no se selecciona un tipo, validar que sea 8 o 11 dígitos
+            if (!(numDocumento.matches("\\d{8}") || numDocumento.matches("\\d{11}"))) {
+                Toast.makeText(this, "El número de documento debe tener 8 o 11 dígitos", Toast.LENGTH_SHORT).show();
+                return false;
+            }
         }
-    }
 
+        return true;
+    }
 
     private void clearInputs() {
         txtNumeroDocumento.setText("");
