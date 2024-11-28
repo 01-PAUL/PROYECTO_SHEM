@@ -8,258 +8,273 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <!-- Título -->
-    <TextView
-        android:id="@+id/tvTitulo"
+    <!-- ScrollView para manejar pantallas pequeñas -->
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="30dp"
-        android:gravity="center"
-        android:text="Registro de ingreso de usuario"
-        android:textColor="@android:color/black"
-        android:textSize="28sp"
-        android:paddingTop="15dp"
-        android:textStyle="bold" />
+        android:layout_height="match_parent">
 
-    <!-- Primera fila: Tipo de Usuario y Código de Usuario -->
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginBottom="35dp">
-
-        <!-- Tipo de Usuario Label and Spinner -->
-        <LinearLayout
-            android:layout_width="0dp"
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:orientation="vertical">
 
+            <!-- Título -->
             <TextView
-                android:id="@+id/tvTipoUsuario"
+                android:id="@+id/tvTitulo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="30dp"
+                android:gravity="center"
+                android:text="Registro de ingreso de usuario"
+                android:textColor="@android:color/black"
+                android:textSize="28sp"
+                android:paddingTop="15dp"
+                android:textStyle="bold" />
+
+            <!-- Primera fila: Tipo de Usuario y Código de Usuario -->
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="35dp">
+
+                <!-- Tipo de Usuario Label and Spinner -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvTipoUsuario"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Tipo de Usuario:"
+                        android:textSize="14sp"
+                        android:textColor="@android:color/black" />
+
+                    <Spinner
+                        android:id="@+id/spinnerTipoUsuario"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp" />
+                </LinearLayout>
+
+                <!-- Código de Usuario Label and Input -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_marginStart="8dp">
+
+                    <TextView
+                        android:id="@+id/tvCodigoUsuario"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Código de Usuario:"
+                        android:textSize="14sp"
+                        android:textColor="@android:color/black" />
+
+                    <EditText
+                        android:id="@+id/txtCodigoUsuario"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:hint="Ingrese código"
+                        android:inputType="text"
+                        android:layout_marginTop="4dp" />
+                </LinearLayout>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <!-- Segunda fila: Tipo de Documento y N° Documento -->
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="35dp">
+
+                <!-- Tipo de Documento Label and Spinner -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvTipoDocumento"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Tipo de Documento:"
+                        android:textSize="14sp"
+                        android:textColor="@android:color/black" />
+
+                    <Spinner
+                        android:id="@+id/spinnerTipoDocumento"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp" />
+                </LinearLayout>
+
+                <!-- N° Documento Label and Input -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_marginStart="8dp">
+
+                    <TextView
+                        android:id="@+id/tvNumeroDocumento"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="N° Documento:"
+                        android:textSize="14sp"
+                        android:textColor="@android:color/black" />
+
+                    <EditText
+                        android:id="@+id/txtNumeroDocumento"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:hint="Ingrese aquí"
+                        android:inputType="number"
+                        android:layout_marginTop="4dp" />
+                </LinearLayout>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <!-- Botones: Escanear QR y Consultar -->
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="35dp">
+
+                <!-- Botón Escanear QR -->
+                <Button
+                    android:id="@+id/btnEscanearQR"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="ESCANEAR QR"
+                    android:textColor="@android:color/white"
+                    android:backgroundTint="#033657" />
+
+                <!-- Botón Consultar -->
+                <Button
+                    android:id="@+id/btnConsultar"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:text="CONSULTAR"
+                    android:textColor="@android:color/white"
+                    android:backgroundTint="#033657" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <!-- Usuario, Autorización e Imagen -->
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="30dp">
+
+                <!-- Usuario y Autorización (Columna Izquierda) -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <!-- Usuario -->
+                    <TextView
+                        android:id="@+id/tvUsuario"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Usuario:"
+                        android:textSize="14sp"
+                        android:textColor="@android:color/black"
+                        android:labelFor="@id/txtUsuario" />
+
+                    <EditText
+                        android:id="@+id/txtUsuario"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:inputType="none"
+                        android:focusable="false"
+                        android:clickable="false" />
+
+                    <!-- Autorización -->
+                    <TextView
+                        android:id="@+id/tvAutorizacion"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Autorización:"
+                        android:textSize="14sp"
+                        android:textColor="@android:color/black"
+                        android:labelFor="@id/txtAutorizacion"/>
+
+                    <EditText
+                        android:id="@+id/txtAutorizacion"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:inputType="none"
+                        android:focusable="false"
+                        android:clickable="false" />
+                </LinearLayout>
+
+                <!-- ImageView al costado -->
+                <ImageView
+                    android:id="@+id/imgView"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="16dp"
+                    android:src="@drawable/ic_launcher_foreground"
+                    android:contentDescription="Imagen del usuario" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <!-- Campo de Micromovilidad -->
+            <TextView
+                android:id="@+id/tvMicromovilidad"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Tipo de Usuario:"
+                android:text="Micromovilidad:"
                 android:textSize="14sp"
-                android:textColor="@android:color/black" />
+                android:textColor="@android:color/black"
+                android:layout_marginBottom="8dp" />
 
             <Spinner
-                android:id="@+id/spinnerTipoUsuario"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"/>
-        </LinearLayout>
-
-        <!-- Código de Usuario Label and Input -->
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:layout_marginStart="8dp">
-
-            <TextView
-                android:id="@+id/tvCodigoUsuario"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Código de Usuario:"
-                android:textSize="14sp"
-                android:textColor="@android:color/black" />
-
-            <EditText
-                android:id="@+id/txtCodigoUsuario"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:hint="Ingrese código"
-                android:inputType="text"
-                android:layout_marginTop="4dp" />
-        </LinearLayout>
-    </androidx.appcompat.widget.LinearLayoutCompat>
-
-    <!-- Segunda fila: Tipo de Documento y N° Documento -->
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginBottom="35dp">
-
-        <!-- Tipo de Documento Label and Spinner -->
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/tvTipoDocumento"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Tipo de Documento:"
-                android:textSize="14sp"
-                android:textColor="@android:color/black" />
-
-            <Spinner
-                android:id="@+id/spinnerTipoDocumento"
+                android:id="@+id/spinnerMicromovilidad"
                 android:layout_width="match_parent"
                 android:layout_height="48dp" />
-        </LinearLayout>
 
-        <!-- N° Documento Label and Input -->
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:layout_marginStart="8dp">
-
-            <TextView
-                android:id="@+id/tvNumeroDocumento"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="N° Documento:"
-                android:textSize="14sp"
-                android:textColor="@android:color/black" />
-
-            <EditText
-                android:id="@+id/txtNumeroDocumento"
+            <!-- Botones Ingreso y Regresar -->
+            <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:hint="Ingrese aquí"
-                android:inputType="number"
-                android:layout_marginTop="4dp" />
-        </LinearLayout>
-    </androidx.appcompat.widget.LinearLayoutCompat>
-
-    <!-- Botones: Escanear QR y Consultar -->
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginBottom="35dp">
-
-        <!-- Botón Escanear QR -->
-        <Button
-            android:id="@+id/btnEscanearQR"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="ESCANEAR QR"
-            android:textColor="@android:color/white"
-            android:backgroundTint="#033657" />
-
-        <!-- Botón Consultar -->
-        <Button
-            android:id="@+id/btnConsultar"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginStart="8dp"
-            android:text="CONSULTAR"
-            android:textColor="@android:color/white"
-            android:backgroundTint="#033657" />
-    </androidx.appcompat.widget.LinearLayoutCompat>
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginBottom="30dp">
-
-        <!-- Usuario y Autorización (Columna Izquierda) -->
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <!-- Usuario -->
-            <TextView
-                android:id="@+id/tvUsuario"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Usuario:"
-                android:textSize="14sp"
-                android:textColor="@android:color/black"
-                android:labelFor="@id/txtUsuario" />
+                android:orientation="horizontal"
+                android:layout_marginTop="35dp">
 
-            <EditText
-                android:id="@+id/txtUsuario"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:inputType="none"
-                android:focusable="false"
-                android:clickable="false" />
+                <!-- Botón Ingreso -->
+                <Button
+                    android:id="@+id/btnIngreso"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:text="INGRESO"
+                    android:textColor="@android:color/white"
+                    android:backgroundTint="#033657" />
 
-            <!-- Autorización -->
-            <TextView
-                android:id="@+id/tvAutorizacion"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Autorización:"
-                android:textSize="14sp"
-                android:textColor="@android:color/black"
-                android:labelFor="@id/txtAutorizacion"/>
+                <!-- Botón Regresar -->
+                <Button
+                    android:id="@+id/btnRegresar"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:text="REGRESAR"
+                    android:textColor="@android:color/white"
+                    android:backgroundTint="#033657" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
 
-            <EditText
-                android:id="@+id/txtAutorizacion"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:inputType="none"
-                android:focusable="false"
-                android:clickable="false" />
-        </LinearLayout>
-
-        <!-- ImageView al costado -->
-        <ImageView
-            android:id="@+id/imgView"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_gravity="center"
-            android:layout_marginStart="16dp"
-            android:src="@drawable/ic_launcher_foreground"
-            android:contentDescription="Imagen del usuario" />
-    </androidx.appcompat.widget.LinearLayoutCompat>
-
-    <!-- Campo de Micromovilidad -->
-    <TextView
-        android:id="@+id/tvMicromovilidad"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Micromovilidad:"
-        android:textSize="14sp"
-        android:textColor="@android:color/black"
-        android:layout_marginBottom="8dp" />
-
-    <Spinner
-        android:id="@+id/spinnerMicromovilidad"
-        android:layout_width="match_parent"
-        android:layout_height="48dp" />
-
-    <!-- Botones Ingreso y Regresar -->
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="35dp">
-
-        <!-- Botón Ingreso -->
-        <Button
-            android:id="@+id/btnIngreso"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:text="INGRESO"
-            android:textColor="@android:color/white"
-            android:backgroundTint="#033657" />
-
-        <!-- Botón Regresar -->
-        <Button
-            android:id="@+id/btnRegresar"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:layout_marginStart="8dp"
-            android:text="REGRESAR"
-            android:textColor="@android:color/white"
-            android:backgroundTint="#033657" />
-    </androidx.appcompat.widget.LinearLayoutCompat>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </ScrollView>
 
 </androidx.appcompat.widget.LinearLayoutCompat>

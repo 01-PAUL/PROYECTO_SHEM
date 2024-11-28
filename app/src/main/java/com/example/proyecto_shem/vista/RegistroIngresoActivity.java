@@ -1,18 +1,21 @@
 package com.example.proyecto_shem.vista;
 
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.content.Intent;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -873,17 +876,50 @@ public class RegistroIngresoActivity extends AppCompatActivity {
     }
 
 
-    //MENSAJE REGISTRADO
+    // MENSAJE REGISTRADO
     private void showSuccessDialog(String usuario, String tipoMicromovilidad) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("INGRESO REGISTRADO DE FORMA EXITOSA!!!!");
-        builder.setMessage("INGRESO A CIBERTEC\n" + usuario + "\n" +
-                        "TIPO DE MICROMOVILIDAD: " + tipoMicromovilidad)
-                .setPositiveButton("Aceptar", (dialog, id) -> dialog.dismiss());
 
+        // Configurar diseño personalizado
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setPadding(50, 50, 50, 50); // Ajustar según necesidad
+        layout.setGravity(Gravity.CENTER); // Asegurarse de centrar el contenido
+
+        // Agregar ícono
+        ImageView icon = new ImageView(this);
+        icon.setImageResource(R.drawable.check); // Asegúrate de tener el recurso "check" en drawable
+        LinearLayout.LayoutParams iconParams = new LinearLayout.LayoutParams(
+                200, // Ancho personalizado (ajustar según necesidad)
+                200  // Alto personalizado (ajustar según necesidad)
+        );
+        iconParams.gravity = Gravity.CENTER; // Centrar el ícono horizontalmente
+        icon.setLayoutParams(iconParams);
+        icon.setPadding(0, 0, 0, 20); // Espacio inferior entre ícono y texto
+        layout.addView(icon);
+
+        // Agregar mensaje
+        TextView message = new TextView(this);
+        message.setText("¡Ingreso registrado exitosamente!");
+        message.setTextSize(18);
+        message.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        message.setTypeface(null, Typeface.BOLD);
+        layout.addView(message);
+
+        // Detalles adicionales
+        TextView details = new TextView(this);
+        details.setText("Ingreso a Cibertec\n\nUsuario: " + usuario + "\nTipo de micromovilidad: " + tipoMicromovilidad);
+        details.setTextSize(16);
+        details.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        layout.addView(details);
+
+        // Configurar AlertDialog
+        builder.setView(layout)
+                .setPositiveButton("Aceptar", (dialog, id) -> dialog.dismiss());
 
         AlertDialog dialog = builder.create();
         dialog.show();
+
         clearInputs();
     }
 

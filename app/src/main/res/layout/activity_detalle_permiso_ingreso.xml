@@ -69,14 +69,15 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/detalleArea"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Nombre del área"
-            android:textColor="@color/black"
-            android:textSize="18sp" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/detalleArea"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nombre del área"
+        android:textColor="@color/black"
+        android:textSize="18sp" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -94,14 +95,15 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/detalleMotivo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Motivo"
-            android:textColor="@color/black"
-            android:textSize="18sp" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/detalleMotivo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Motivo"
+        android:textColor="@color/black"
+        android:textSize="18sp" />
 
     <LinearLayout
         android:layout_width="wrap_content"

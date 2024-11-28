@@ -1,211 +1,215 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
-
-    <!-- Título -->
-    <TextView
-        android:id="@+id/tvTitulo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="30dp"
-        android:gravity="center"
-        android:paddingTop="30dp"
-        android:text="Registro de salida de usuario"
-        android:textColor="@android:color/black"
-        android:textSize="29sp"
-        android:textStyle="bold" />
-
-    <!-- Contenedor para tipo de documento y número de documento en horizontal -->
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginBottom="30dp">
-
-        <!-- Tipo de documento Label -->
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
-            <TextView
-                android:id="@+id/tvTipoDocumento"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Tipo de Documento:"
-                android:textSize="16sp"
-                android:textColor="@android:color/black"
-                android:layout_marginBottom="2dp"/>
-
-            <!-- Spinner para tipo de documento -->
-            <Spinner
-                android:id="@+id/spinnerTipoDocumento"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/tvNumeroDocumento"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="N° de Documento:"
-                android:textSize="16sp"
-                android:textColor="@android:color/black"
-                android:padding="1dp"
-                android:layout_marginBottom="2dp" />
-
-            <!-- Campo de texto para número de documento -->
-            <EditText
-                android:id="@+id/txtNumeroDocumento"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:hint="Ingrese aquí"
-                android:inputType="number" />
-        </LinearLayout>
-    </androidx.appcompat.widget.LinearLayoutCompat>
-
-    <!-- Botón Consultar -->
-    <Button
-        android:id="@+id/btnConsultar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="CONSULTAR"
-        android:textColor="@android:color/white"
-        android:backgroundTint="#033657"
-        android:layout_marginBottom="40dp" />
+    android:layout_height="match_parent">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginBottom="50dp">
+        android:orientation="vertical"
+        android:padding="16dp">
 
-        <!-- Usuario y Autorización (Columna Izquierda) -->
-        <LinearLayout
-            android:layout_width="0dp"
+        <!-- Título -->
+        <TextView
+            android:id="@+id/tvTitulo"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:layout_marginBottom="30dp"
+            android:gravity="center"
+            android:paddingTop="30dp"
+            android:text="Registro de salida de usuario"
+            android:textColor="@android:color/black"
+            android:textSize="29sp"
+            android:textStyle="bold" />
 
-            <!-- Usuario -->
-            <TextView
-                android:id="@+id/tvUsuario"
-                android:layout_width="wrap_content"
+        <!-- Contenedor para tipo de documento y número de documento en horizontal -->
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="30dp">
+
+            <!-- Tipo de documento Label -->
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Usuario:"
-                android:textSize="14sp"
-                android:textColor="@android:color/black"
-                android:labelFor="@id/txtUsuario" />
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/tvTipoDocumento"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tipo de Documento:"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/black"
+                    android:layout_marginBottom="2dp"/>
 
-            <EditText
-                android:id="@+id/txtUsuario"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:inputType="none"
-                android:focusable="false"
-                android:clickable="false"
-                android:layout_marginBottom="13dp"/>
+                <!-- Spinner para tipo de documento -->
+                <Spinner
+                    android:id="@+id/spinnerTipoDocumento"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"/>
+            </LinearLayout>
 
-            <TextView
-                android:id="@+id/tvArea"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Área:"
-                android:textSize="14sp"
-                android:textColor="@android:color/black"
-                android:labelFor="@id/txtArea"/>
+                android:layout_weight="1"
+                android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/txtArea"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:inputType="none"
-                android:focusable="false"
-                android:clickable="false"
-                android:layout_marginBottom="13dp"/>
-            <TextView
-                android:id="@+id/tvDetallePermiso"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Detalle de Permiso:"
-                android:textSize="14sp"
-                android:textColor="@android:color/black"
-                android:labelFor="@id/txtDetalle"/>
+                <TextView
+                    android:id="@+id/tvNumeroDocumento"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="N° de Documento:"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/black"
+                    android:padding="1dp"
+                    android:layout_marginBottom="2dp" />
 
-            <EditText
-                android:id="@+id/txtDetalle"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:inputType="none"
-                android:focusable="false"
-                android:clickable="false"
-                android:layout_marginBottom="13dp"/>
+                <!-- Campo de texto para número de documento -->
+                <EditText
+                    android:id="@+id/txtNumeroDocumento"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:hint="Ingrese aquí"
+                    android:inputType="number" />
+            </LinearLayout>
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
-            <TextView
-                android:id="@+id/tvMicromovilidad"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Micromovilidad:"
-                android:textSize="14sp"
-                android:textColor="@android:color/black"
-                android:labelFor="@id/txtMicromovilidad"/>
-
-            <EditText
-                android:id="@+id/txtMicromovilidad"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:inputType="none"
-                android:focusable="false"
-                android:clickable="false"/>
-        </LinearLayout>
-
-        <!-- ImageView al costado -->
-        <ImageView
-            android:id="@+id/imgView"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_gravity="center"
-            android:layout_marginStart="16dp"
-            android:src="@drawable/ic_launcher_foreground"
-            android:contentDescription="Imagen del usuario" />
-    </androidx.appcompat.widget.LinearLayoutCompat>
-
-    <!-- Botones Registrar y Regresar en horizontal -->
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <!-- Botón Registrar -->
+        <!-- Botón Consultar -->
         <Button
-            android:id="@+id/btnRegistrar"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:text="REGISTRAR"
-            android:textColor="@android:color/white"
-            android:backgroundTint="#033657" />
-
-        <!-- Botón Regresar -->
-        <Button
-            android:id="@+id/btnRegresar"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:text="REGRESAR"
+            android:id="@+id/btnConsultar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="CONSULTAR"
             android:textColor="@android:color/white"
             android:backgroundTint="#033657"
-            android:layout_marginStart="16dp" />
-    </androidx.appcompat.widget.LinearLayoutCompat>
+            android:layout_marginBottom="40dp" />
 
-</androidx.appcompat.widget.LinearLayoutCompat>
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="50dp">
+
+            <!-- Usuario y Autorización (Columna Izquierda) -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <!-- Usuario -->
+                <TextView
+                    android:id="@+id/tvUsuario"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Usuario:"
+                    android:textSize="14sp"
+                    android:textColor="@android:color/black"
+                    android:labelFor="@id/txtUsuario" />
+
+                <EditText
+                    android:id="@+id/txtUsuario"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:inputType="none"
+                    android:focusable="false"
+                    android:clickable="false"
+                    android:layout_marginBottom="13dp"/>
+
+                <TextView
+                    android:id="@+id/tvArea"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Área:"
+                    android:textSize="14sp"
+                    android:textColor="@android:color/black"
+                    android:labelFor="@id/txtArea"/>
+
+                <EditText
+                    android:id="@+id/txtArea"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:inputType="none"
+                    android:focusable="false"
+                    android:clickable="false"
+                    android:layout_marginBottom="13dp"/>
+                <TextView
+                    android:id="@+id/tvDetallePermiso"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Detalle de Permiso:"
+                    android:textSize="14sp"
+                    android:textColor="@android:color/black"
+                    android:labelFor="@id/txtDetalle"/>
+
+                <EditText
+                    android:id="@+id/txtDetalle"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:inputType="none"
+                    android:focusable="false"
+                    android:clickable="false"
+                    android:layout_marginBottom="13dp"/>
+
+                <TextView
+                    android:id="@+id/tvMicromovilidad"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Micromovilidad:"
+                    android:textSize="14sp"
+                    android:textColor="@android:color/black"
+                    android:labelFor="@id/txtMicromovilidad"/>
+
+                <EditText
+                    android:id="@+id/txtMicromovilidad"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:inputType="none"
+                    android:focusable="false"
+                    android:clickable="false"/>
+            </LinearLayout>
+
+            <!-- ImageView al costado -->
+            <ImageView
+                android:id="@+id/imgView"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_gravity="center"
+                android:layout_marginStart="16dp"
+                android:src="@drawable/ic_launcher_foreground"
+                android:contentDescription="Imagen del usuario" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <!-- Botones Registrar y Regresar en horizontal -->
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <!-- Botón Registrar -->
+            <Button
+                android:id="@+id/btnRegistrar"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:text="REGISTRAR"
+                android:textColor="@android:color/white"
+                android:backgroundTint="#033657" />
+
+            <!-- Botón Regresar -->
+            <Button
+                android:id="@+id/btnRegresar"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:text="REGRESAR"
+                android:textColor="@android:color/white"
+                android:backgroundTint="#033657"
+                android:layout_marginStart="16dp" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</ScrollView>
