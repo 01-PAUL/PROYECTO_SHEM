@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="30dp"
             android:gravity="center"
-            android:paddingTop="30dp"
+            android:paddingTop="25dp"
             android:text="Registro de salida de usuario"
             android:textColor="@android:color/black"
             android:textSize="29sp"
@@ -113,11 +113,13 @@
                 <EditText
                     android:id="@+id/txtUsuario"
                     android:layout_width="match_parent"
-                    android:layout_height="48dp"
+                    android:layout_height="68dp"
                     android:inputType="none"
                     android:focusable="false"
                     android:clickable="false"
-                    android:layout_marginBottom="13dp"/>
+                    android:layout_marginBottom="13dp"
+                    android:longClickable="false"
+                    android:cursorVisible="false"/>
 
                 <TextView
                     android:id="@+id/tvArea"
@@ -135,7 +137,9 @@
                     android:inputType="none"
                     android:focusable="false"
                     android:clickable="false"
-                    android:layout_marginBottom="13dp"/>
+                    android:layout_marginBottom="13dp"
+                    android:longClickable="false"
+                    android:cursorVisible="false"/>
                 <TextView
                     android:id="@+id/tvDetallePermiso"
                     android:layout_width="wrap_content"
@@ -148,11 +152,13 @@
                 <EditText
                     android:id="@+id/txtDetalle"
                     android:layout_width="match_parent"
-                    android:layout_height="48dp"
+                    android:layout_height="68dp"
                     android:inputType="none"
                     android:focusable="false"
                     android:clickable="false"
-                    android:layout_marginBottom="13dp"/>
+                    android:layout_marginBottom="13dp"
+                    android:longClickable="false"
+                    android:cursorVisible="false"/>
 
                 <TextView
                     android:id="@+id/tvMicromovilidad"
@@ -169,7 +175,9 @@
                     android:layout_height="48dp"
                     android:inputType="none"
                     android:focusable="false"
-                    android:clickable="false"/>
+                    android:clickable="false"
+                    android:longClickable="false"
+                    android:cursorVisible="false"/>
             </LinearLayout>
 
             <!-- ImageView al costado -->

@@ -104,9 +104,12 @@ import java.util.Map;
         });
 
         txtNumeroDocumento.addTextChangedListener(new TextWatcher() {
+            private int previousLength = 0;  // Variable para almacenar la longitud anterior del texto
+
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // No es necesario implementar
+                // Almacenar la longitud anterior antes de que el texto cambie
+                previousLength = s.length();
             }
 
             @Override
@@ -117,14 +120,25 @@ import java.util.Map;
             @Override
             public void afterTextChanged(Editable s) {
                 String input = s.toString();
+
                 // Verificar si hay caracteres no numéricos
                 if (!input.matches("\\d*")) {
                     txtNumeroDocumento.removeTextChangedListener(this); // Evitar bucles
                     // Eliminar caracteres no numéricos
                     txtNumeroDocumento.setText(input.replaceAll("[^\\d]", ""));
-                    txtNumeroDocumento.setSelection(txtNumeroDocumento.getText().length()); // Mover el cursor al final
+                    txtNumeroDocumento.setSelection(txtNumeroDocumento.getText().length());
                     txtNumeroDocumento.addTextChangedListener(this);
                 }
+
+                // Validar si se borró un dígito
+                if (input.length() < previousLength) {
+                    clear();  // Limpiar los campos si se borró un dígito
+                }
+
+                // Actualizar la longitud previa después de que se haya modificado el texto
+                previousLength = input.length();
+
+                // Aquí podrías agregar lógica para realizar la consulta de los datos si el número de documento es válido
             }
         });
 
@@ -439,14 +453,6 @@ import java.util.Map;
             return false;
         }
 
-        String numDocumento = txtNumeroDocumento.getText().toString();
-        if (!numDocumento.isEmpty()) {
-            if (numDocumento.length() != 8 || !numDocumento.matches("\\d+")) {
-                Toast.makeText(this, "El número de documento debe tener 8 dígitos", Toast.LENGTH_SHORT).show();
-                return false;
-            }
-        }
-
         if (txtUsuario.getText().toString().isEmpty()) {
             Toast.makeText(this, "Completar datos", Toast.LENGTH_SHORT).show();
             return false;
@@ -562,6 +568,14 @@ import java.util.Map;
         txtArea.setText("");
         txtDetalle.setText("");
         txtMicromovilidad.setText("");
+        spinnerTipoDocumento.setSelection(0);
+        imgView.setImageResource(R.drawable.ic_launcher_foreground);
+    }
+
+    private void clear() {
+        txtUsuario.setText("");
+        txtArea.setText("");
+        txtDetalle.setText("");
         spinnerTipoDocumento.setSelection(0);
         imgView.setImageResource(R.drawable.ic_launcher_foreground);
     }

@@ -9,21 +9,19 @@
     tools:context=".vista.DetallePermisoSalidaActivity">
 
     <TextView
-        android:id="@+id/tv_titulo"
+        android:id="@+id/detalleNomUsuario"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:paddingBottom="16dp"
-        android:text="PERMISO DE SALIDA "
+        android:padding="20dp"
+        android:text="Nombre del usuario"
         android:textAlignment="center"
-        android:textSize="28sp"
-        android:paddingTop="20dp"
-        android:textStyle="bold" />
+        android:textColor="@color/black"
+        android:textSize="35sp" />
 
     <ImageView
         android:id="@+id/detalleImagen"
-        android:layout_width="270dp"
-        android:layout_height="230dp"
+        android:layout_width="250dp"
+        android:layout_height="220dp"
         android:padding="2dp"
         android:scaleType="fitXY"
         android:src="@drawable/ic_launcher_foreground" />
@@ -36,19 +34,27 @@
         android:orientation="horizontal">
 
         <TextView
+            android:id="@+id/tipoDocumento"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tipo doc"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingEnd="8dp"
-            android:text="USUARIO:"
+            android:text=":"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/detalleNomUsuario"
+            android:id="@+id/numDocumento"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Nombre del usuario"
+            android:text="Num documento"
             android:textColor="@color/black"
             android:textSize="18sp" />
     </LinearLayout>

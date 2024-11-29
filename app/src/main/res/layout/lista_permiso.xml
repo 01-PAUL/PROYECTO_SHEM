@@ -46,7 +46,7 @@
                 <TextView
                     android:id="@+id/usuario"
                     android:layout_width="230dp"
-                    android:layout_height="30dp"
+                    android:layout_height="36dp"
                     android:layout_marginBottom="4dp"
                     android:text="nombre"
                     android:textColor="@android:color/black"
@@ -56,10 +56,10 @@
                 <TextView
                     android:id="@+id/motivo"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="20dp"
+                    android:layout_marginBottom="1dp"
                     android:text="motivo"
-                    android:textSize="17sp"
-                    />
+                    android:textSize="15sp" />
 
             </LinearLayout>
 
@@ -71,10 +71,10 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:layout_centerInParent="true"
-                android:layout_marginEnd="20dp"
+                android:layout_marginEnd="10dp"
                 android:layout_marginRight="6dp"
                 android:text="reclamo"
-                android:textSize="18sp"
+                android:textSize="15sp"
                 android:textStyle="bold" />
 
         </RelativeLayout>

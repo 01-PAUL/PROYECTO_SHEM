@@ -17,11 +17,22 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class RecuperarContrasenaActivity extends AppCompatActivity {
 
     Button btnRecuperar;
     EditText txtLogin;
     TextView atras;
+
+    // Lista de correos permitidos para recuperar la contraseña
+    private final List<String> allowedEmails = Arrays.asList(
+            "paulponcehuaranga@gmail.com",
+            "mmayllaquispe@gmail.com",
+            "estiben.mt123@gmail.com",
+            "jarencesar127@gmail.com"
+    );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,11 +60,18 @@ public class RecuperarContrasenaActivity extends AppCompatActivity {
         });
     }
 
+    // Validación del correo
     public void validate() {
         String email = txtLogin.getText().toString().trim();
 
         if (email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             txtLogin.setError("Correo inválido");
+            return;
+        }
+
+        // Verifica si el correo está en la lista de correos permitidos
+        if (!allowedEmails.contains(email)) {
+            Toast.makeText(RecuperarContrasenaActivity.this, "Este correo no está autorizado para recuperar la contraseña", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -70,6 +88,7 @@ public class RecuperarContrasenaActivity extends AppCompatActivity {
         finish();
     }
 
+    // Método para enviar el correo de recuperación
     public void sendEmail(String email) {
         FirebaseAuth auth = FirebaseAuth.getInstance();
 

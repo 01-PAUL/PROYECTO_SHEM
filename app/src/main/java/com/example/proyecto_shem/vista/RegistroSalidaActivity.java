@@ -54,6 +54,7 @@ public class RegistroSalidaActivity extends AppCompatActivity {
     private Map<Integer, String> tipoUsuarioMap;
     private Map<Integer, String> tipoDocumentoMap;
     boolean isInternalChange = false;
+    private boolean isScanningQR = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,9 +108,11 @@ public class RegistroSalidaActivity extends AppCompatActivity {
         });
 
         txtNumeroDocumento.addTextChangedListener(new TextWatcher() {
+            private int previousLength = 0;
+
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // No es necesario implementar
+                previousLength = s.length();
             }
 
             @Override
@@ -120,20 +123,36 @@ public class RegistroSalidaActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 String input = s.toString();
+
                 // Verificar si hay caracteres no numéricos
                 if (!input.matches("\\d*")) {
                     txtNumeroDocumento.removeTextChangedListener(this); // Evitar bucles
                     // Eliminar caracteres no numéricos
                     txtNumeroDocumento.setText(input.replaceAll("[^\\d]", ""));
-                    txtNumeroDocumento.setSelection(txtNumeroDocumento.getText().length()); // Mover el cursor al final
+                    txtNumeroDocumento.setSelection(txtNumeroDocumento.getText().length());
                     txtNumeroDocumento.addTextChangedListener(this);
                 }
+
+                // Validar si se borró un dígito
+                if (input.length() < previousLength) {
+                    clearDocumento();  // Limpiar los campos si se borró un dígito
+                }
+
+                // Actualizar la longitud previa después de que se haya modificado el texto
+                previousLength = input.length();
+
+                // Aquí podrías agregar lógica para realizar la consulta de los datos si el número de documento es válido
             }
         });
 
         spinnerTipoDocumento.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (isScanningQR) {
+                    isScanningQR = false; // Desactiva la bandera
+                    return; // No realizar validaciones
+                }
+
                 String tipoDocumento = spinnerTipoDocumento.getSelectedItem().toString();
                 String numDocumento = txtNumeroDocumento.getText().toString();
 
@@ -162,9 +181,14 @@ public class RegistroSalidaActivity extends AppCompatActivity {
         });
 
         txtCodigoUsuario.addTextChangedListener(new TextWatcher() {
+
+            private boolean isInternalChange = false; // Control para evitar bucles infinitos
+            private int previousLengthCodigoUsuario = 0; // Longitud previa del texto en txtCodigoUsuario
+
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // No es necesario implementar
+                // Almacenar la longitud previa antes del cambio
+                previousLengthCodigoUsuario = s.length();
             }
 
             @Override
@@ -178,14 +202,23 @@ public class RegistroSalidaActivity extends AppCompatActivity {
                 isInternalChange = true;
 
                 String input = s.toString();
+
+                // Verificar si hay espacios iniciales y eliminarlos
                 if (!input.isEmpty() && input.charAt(0) == ' ') {
-                    // Eliminar espacios iniciales
                     txtCodigoUsuario.setText(input.trim());
                     txtCodigoUsuario.setSelection(txtCodigoUsuario.getText().length());
                 } else {
                     // Limitar la longitud máxima
                     txtCodigoUsuario.setFilters(new InputFilter[]{new InputFilter.LengthFilter(10)});
                 }
+
+                // Verificar si se borró un dígito (la longitud actual es menor que la previa)
+                if (input.length() < previousLengthCodigoUsuario) {
+                    clearCodigo(); // Limpiar los campos excepto txtNumeroDocumento
+                }
+
+                // Actualizar la longitud previa
+                previousLengthCodigoUsuario = input.length();
 
                 isInternalChange = false;
             }
@@ -194,6 +227,11 @@ public class RegistroSalidaActivity extends AppCompatActivity {
         spinnerTipoUsuario.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (isScanningQR) {
+                    isScanningQR = false; // Desactiva la bandera
+                    return; // No realizar validaciones
+                }
+
                 String tipoUsuario = spinnerTipoUsuario.getSelectedItem().toString();
 
                 if (tipoUsuario.equals("Seleccione:")) {
@@ -226,7 +264,7 @@ public class RegistroSalidaActivity extends AppCompatActivity {
         btnEscanearQR.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                isScanningQR = true; // Indicar que se está escaneando un QR
                 IntentIntegrator integrador = new IntentIntegrator(RegistroSalidaActivity.this);
                 integrador.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
                 integrador.setPrompt("lector - CDP");
@@ -282,65 +320,41 @@ public class RegistroSalidaActivity extends AppCompatActivity {
                 if (validateInputs()) {
                     String codigoUsuario = txtCodigoUsuario.getText().toString().toUpperCase();
 
-                    // Proceder directamente con el registro de salida sin validar en la tabla Salida
-                    String tipoUsuario = spinnerTipoUsuario.getSelectedItem().toString();
-                    String tipoDocumento = spinnerTipoDocumento.getSelectedItem().toString();
-                    String numeroDocumento = txtNumeroDocumento.getText().toString();
-                    String usuario = txtUsuario.getText().toString();
-                    String micromovilidad = txtMovilidad.getText().toString();
-                    String imageUrl = imgView.getTag() != null ? imgView.getTag().toString() : "";
+                    // Verificar si el usuario está activo en la tabla "Ingreso"
+                    databaseReference.child("Ingreso")
+                            .orderByChild("codigoUsuario")
+                            .equalTo(codigoUsuario)
+                            .addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    boolean usuarioActivoEncontrado = false;
 
-                    // Obtener la fecha y hora actuales
-                    Calendar calendar = Calendar.getInstance();
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                    SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+                                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                        String estado = snapshot.child("estado").getValue(String.class);
 
-                    String fechaSalida = dateFormat.format(calendar.getTime());
-                    String horaSalida = timeFormat.format(calendar.getTime());
+                                        if ("activo".equals(estado)) {
+                                            usuarioActivoEncontrado = true;
+                                            // Usuario está activo, proceder con el registro de salida
+                                            registrarSalida(snapshot);
+                                            break; // Detener búsqueda al encontrar usuario activo
+                                        }
+                                    }
 
-                    Map<String, Object> datosSalida = new HashMap<>();
-                    datosSalida.put("tipoUsuario", tipoUsuario);
-                    datosSalida.put("codigoUsuario", codigoUsuario);
-                    datosSalida.put("tipoDocumento", tipoDocumento);
-                    datosSalida.put("numeroDocumento", numeroDocumento);
-                    datosSalida.put("usuario", usuario);
-                    datosSalida.put("micromovilidad", micromovilidad);
-                    datosSalida.put("imageUrl", imageUrl);
-                    datosSalida.put("fechaSalida", fechaSalida);
-                    datosSalida.put("horaSalida", horaSalida);
-                    datosSalida.put("estado", "activo"); // Añadir el campo de estado
+                                    if (!usuarioActivoEncontrado) {
+                                        // Si no se encuentra activo, mostrar mensaje
+                                        Toast.makeText(RegistroSalidaActivity.this, "Usuario ya salió de Cibertec", Toast.LENGTH_SHORT).show();
+                                        clearInputs();
+                                    }
+                                }
 
-                    databaseReference.child("Salida").push().setValue(datosSalida)
-                            .addOnCompleteListener(task -> {
-                                if (task.isSuccessful()) {
-                                    showSuccessDialog(usuario, micromovilidad);
-
-                                    // Actualizar estado en la tabla Ingreso a "inactivo"
-                                    databaseReference.child("Ingreso")
-                                            .orderByChild("codigoUsuario")
-                                            .equalTo(codigoUsuario)
-                                            .addListenerForSingleValueEvent(new ValueEventListener() {
-                                                @Override
-                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                                        snapshot.getRef().child("estado").setValue("inactivo"); // Cambiar estado a inactivo
-                                                    }
-                                                }
-
-                                                @Override
-                                                public void onCancelled(@NonNull DatabaseError databaseError) {
-                                                    Toast.makeText(RegistroSalidaActivity.this, "Error al actualizar estado en Ingreso", Toast.LENGTH_SHORT).show();
-                                                }
-                                            });
-                                } else {
-                                    Toast.makeText(RegistroSalidaActivity.this, "Error al registrar salida", Toast.LENGTH_SHORT).show();
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+                                    Toast.makeText(RegistroSalidaActivity.this, "Error al verificar el ingreso", Toast.LENGTH_SHORT).show();
                                 }
                             });
                 }
             }
         });
-
-
 
         // Acción al presionar el botón Regresar
         btnRegresar.setOnClickListener(new View.OnClickListener() {
@@ -383,6 +397,52 @@ public class RegistroSalidaActivity extends AppCompatActivity {
 
         // Convertir a minúscula si el campo actual está en minúscula
         return esMinuscula ? Character.toLowerCase(letra) : letra;
+    }
+
+    private void registrarSalida(DataSnapshot snapshotIngreso) {
+        String tipoUsuario = spinnerTipoUsuario.getSelectedItem().toString();
+        String tipoDocumento = spinnerTipoDocumento.getSelectedItem().toString();
+        String numeroDocumento = txtNumeroDocumento.getText().toString();
+        String usuario = txtUsuario.getText().toString();
+        String micromovilidad = txtMovilidad.getText().toString();
+        String imageUrl = imgView.getTag() != null ? imgView.getTag().toString() : "";
+
+        // Obtener la fecha y hora actuales
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+
+        String fechaSalida = dateFormat.format(calendar.getTime());
+        String horaSalida = timeFormat.format(calendar.getTime());
+
+        Map<String, Object> datosSalida = new HashMap<>();
+        datosSalida.put("tipoUsuario", tipoUsuario);
+        datosSalida.put("codigoUsuario", snapshotIngreso.child("codigoUsuario").getValue(String.class));
+        datosSalida.put("tipoDocumento", tipoDocumento);
+        datosSalida.put("numeroDocumento", numeroDocumento);
+        datosSalida.put("usuario", usuario);
+        datosSalida.put("micromovilidad", micromovilidad);
+        datosSalida.put("imageUrl", imageUrl);
+        datosSalida.put("fechaSalida", fechaSalida);
+        datosSalida.put("horaSalida", horaSalida);
+        datosSalida.put("estado", "activo"); // Añadir el campo de estado
+
+        databaseReference.child("Salida").push().setValue(datosSalida)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        showSuccessDialog(usuario, micromovilidad);
+
+                        // Actualizar estado en la tabla "Ingreso" a "inactivo"
+                        snapshotIngreso.getRef().child("estado").setValue("inactivo")
+                                .addOnCompleteListener(updateTask -> {
+                                    if (!updateTask.isSuccessful()) {
+                                        Toast.makeText(RegistroSalidaActivity.this, "Error al actualizar estado en Ingreso", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                    } else {
+                        Toast.makeText(RegistroSalidaActivity.this, "Error al registrar salida", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     // Método para cargar datos en los spinners desde Firebase
@@ -976,6 +1036,23 @@ public class RegistroSalidaActivity extends AppCompatActivity {
     private void clearInputs() {
         txtCodigoUsuario.setText("");
         txtNumeroDocumento.setText("");
+        txtUsuario.setText("");
+        txtMovilidad.setText("");
+        spinnerTipoUsuario.setSelection(0);
+        spinnerTipoDocumento.setSelection(0);
+        imgView.setImageResource(R.drawable.ic_launcher_foreground);
+    }
+
+    private void clearDocumento() {
+        txtUsuario.setText("");
+        txtMovilidad.setText("");
+        txtCodigoUsuario.setText("");
+        spinnerTipoUsuario.setSelection(0);
+        spinnerTipoDocumento.setSelection(0);
+        imgView.setImageResource(R.drawable.ic_launcher_foreground);
+    }
+
+    private void clearCodigo() {
         txtUsuario.setText("");
         txtMovilidad.setText("");
         spinnerTipoUsuario.setSelection(0);

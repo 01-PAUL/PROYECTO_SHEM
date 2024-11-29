@@ -112,23 +112,109 @@ public class RegistroPermisoActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                // Obtén el texto actual
                 String text = s.toString();
 
-                // Validar que no empiece con espacios y que permita espacios luego de letras
-                if (!text.matches("^[a-zA-ZáéíóúÁÉÍÓÚñÑ]+( [a-zA-ZáéíóúÁÉÍÓÚñÑ]*)*$")) {
-                    // Limpia espacios iniciales y múltiples espacios consecutivos
-                    String cleanedText = text.replaceAll("^\\s+", "") // Elimina espacios iniciales
-                            .replaceAll("\\s{2,}", " "); // Reemplaza múltiples espacios por uno
+                // Si el texto está vacío, no validar
+                if (text.isEmpty()) {
+                    txtDetalle.setError(null); // Limpia cualquier error si el campo está vacío
+                    disableRegisterButton();
+                    return;
+                }
 
-                    // Actualiza el texto del campo
+                boolean isValid = true;
+                String errorMessage = null;
+
+                // Contar solo las letras (ignorando espacios)
+                int letterCount = countLetters(text);
+
+                // Validar que no empiece con espacios, permita espacios después de letras, tenga entre 6 y 35 letras y no repita más de dos letras consecutivas
+                if (!text.matches("^[a-zA-ZáéíóúÁÉÍÓÚñÑ]+( [a-zA-ZáéíóúÁÉÍÓÚñÑ]+)*$")) {
+                    isValid = false;
+                    errorMessage = "Solo se permiten letras y espacios.";
+                } else if (letterCount < 6) {
+                    isValid = false;
+                    errorMessage = "Debe tener al menos 6 letras.";
+                } else if (letterCount > 35) {
+                    isValid = false;
+                    errorMessage = "No debe exceder las 35 letras.";
+                } else if (text.matches(".([a-zA-ZáéíóúÁÉÍÓÚñÑ])\\1\\1.")) { // Detecta más de dos letras iguales seguidas
+                    isValid = false;
+                    errorMessage = "No se permiten más de dos letras iguales juntas.";
+                }
+
+                // Si no es válido, mostrar mensaje de error y limpiar el texto si es necesario
+                if (!isValid) {
+                    String cleanedText = text;
+
+                    if (letterCount > 35) {
+                        errorMessage = "No se permite más de 35 letras.";
+                        // Recorta al máximo permitido
+                        cleanedText = trimToMaxLetters(text, 35);
+                    }
+
+                    cleanedText = cleanedText.replaceAll("^\\s+", "") // Elimina espacios iniciales
+                            .replaceAll("\\s{2,}", " ") // Reemplaza múltiples espacios por uno
+                            .replaceAll("([a-zA-ZáéíóúÁÉÍÓÚñÑ])\\1\\1+", "$1$1"); // Reemplaza más de dos letras consecutivas por dos
+
                     txtDetalle.removeTextChangedListener(this); // Evita el bucle infinito
                     txtDetalle.setText(cleanedText);
                     txtDetalle.setSelection(cleanedText.length()); // Mantén el cursor al final del texto
                     txtDetalle.addTextChangedListener(this);
+
+                    // Mostrar mensaje de error
+                    txtDetalle.setError(errorMessage);
+                    disableRegisterButton(); // Deshabilita el botón si no es válido
+                } else {
+                    txtDetalle.setError(null); // Limpia el error si todo es válido
+                    enableRegisterButton(); // Habilita el botón si es válido
                 }
             }
+
+            // Método auxiliar para contar letras en el texto (ignora los espacios)
+            private int countLetters(String text) {
+                int count = 0;
+                for (char c : text.toCharArray()) {
+                    if (Character.isLetter(c)) {
+                        count++;
+                    }
+                }
+                return count;
+            }
+
+            // Método auxiliar para recortar el texto al máximo de letras permitidas
+            private String trimToMaxLetters(String text, int maxLetters) {
+                StringBuilder result = new StringBuilder();
+                int letterCount = 0;
+
+                for (char c : text.toCharArray()) {
+                    if (Character.isLetter(c)) {
+                        if (letterCount >= maxLetters) {
+                            break;
+                        }
+                        letterCount++;
+                    }
+                    result.append(c);
+                }
+
+                return result.toString();
+            }
+
+            // Método para deshabilitar el botón de registrar
+            private void disableRegisterButton() {
+                btnRegistrar.setEnabled(false);
+                btnRegistrar.setBackgroundColor(0xFFA9A9A9); // Puedes cambiar el color según tu diseño
+            }
+
+            // Método para habilitar el botón de registrar
+            private void enableRegisterButton() {
+                btnRegistrar.setEnabled(true);
+                btnRegistrar.setBackgroundColor(Color.parseColor("#033657")); // Puedes cambiar el color según tu diseño
+            }
         });
+
+
+
+
 
         txtNumeroDocumento.addTextChangedListener(new TextWatcher() {
             @Override
@@ -189,19 +275,26 @@ public class RegistroPermisoActivity extends AppCompatActivity {
         btnRegresar.setOnClickListener(v -> finish());
 
         btnConsultar.setOnClickListener(v -> {
-            if (validarCampos()) {
-                String numDocumento = txtNumeroDocumento.getText().toString().trim();
+            // Obtener el número de documento y verificar si está vacío
+            String numDocumento = txtNumeroDocumento.getText().toString().trim();
 
-                if (numDocumento.isEmpty()) {
-                    Toast.makeText(RegistroPermisoActivity.this, "Ingrese el N° Documento", Toast.LENGTH_SHORT).show();
-                } else {
-                    // Si uno de los campos tiene un valor, procede con la consulta
-                    if (!numDocumento.isEmpty()) {
-                        consultarDocumento(numDocumento);
-                    }
-                }
+            // Si el número de documento está vacío, limpiar toda la información
+            if (numDocumento.isEmpty()) {
+                // Limpiar TextViews
+                txtUsuario.setText("");
+                txtGenero.setText("");
+                txtFechNacim.setText("");
+                imgView.setImageResource(R.drawable.ic_launcher_foreground);
+
+                // Mostrar un mensaje indicando que el campo está vacío
+                Toast.makeText(RegistroPermisoActivity.this, "Ingrese el N° Documento", Toast.LENGTH_SHORT).show();
+            } else {
+                // Si no está vacío, proceder con la consulta
+                consultarDocumento(numDocumento);
             }
         });
+
+
 
         btnRegistrar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -553,6 +646,9 @@ public class RegistroPermisoActivity extends AppCompatActivity {
 
         return true;
     }
+
+
+
 
 
     private boolean validarCampos() {

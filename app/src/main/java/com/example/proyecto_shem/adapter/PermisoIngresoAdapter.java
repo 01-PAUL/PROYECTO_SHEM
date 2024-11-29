@@ -58,6 +58,8 @@ public class PermisoIngresoAdapter extends RecyclerView.Adapter<PermisoIngresoAd
             // Pasar todos los datos necesarios a la actividad de detalles
             intent.putExtra("imageUrl", permiso.getImageUrl());
             intent.putExtra("usuario", permiso.getUsuario());
+            intent.putExtra("tipoDocumento", permiso.getTipoDocumento());
+            intent.putExtra("numeroDocumento", permiso.getNumeroDocumento());
             intent.putExtra("motivo", permiso.getDetallePermiso());
             intent.putExtra("tipoMicromovilidad", permiso.getTipoMicromovilidad());
             intent.putExtra("area", permiso.getArea());

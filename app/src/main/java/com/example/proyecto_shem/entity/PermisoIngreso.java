@@ -7,7 +7,7 @@ public class PermisoIngreso implements Serializable {
     private int idPermiso;
     private String usuario;
     private String tipoDocumento;
-    private String numDocumento;
+    private String numeroDocumento;
     private String genero;
     private String nacionalidad;
     private String imageUrl;
@@ -42,12 +42,12 @@ public class PermisoIngreso implements Serializable {
         this.tipoDocumento = tipoDocumento;
     }
 
-    public String getNumDocumento() {
-        return numDocumento;
+    public String getNumeroDocumento() {
+        return numeroDocumento;
     }
 
-    public void setNumDocumento(String numDocumento) {
-        this.numDocumento = numDocumento;
+    public void setNumeroDocumento(String numeroDocumento) {
+        this.numeroDocumento = numeroDocumento;
     }
 
     public String getGenero() {

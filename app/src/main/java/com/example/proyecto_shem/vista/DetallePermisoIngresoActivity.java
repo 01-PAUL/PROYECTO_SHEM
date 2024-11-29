@@ -12,7 +12,7 @@ import com.bumptech.glide.Glide;
 import com.example.proyecto_shem.R;
 
 public class DetallePermisoIngresoActivity extends AppCompatActivity {
-    TextView detalleNomUsuario, detalleArea, detalleMotivo, detalleTipoMovilidad, detalleFechaIngreso, detalleHoraIngreso;
+    TextView detalleNomUsuario, detalleArea, detalleMotivo, detalleTipoMovilidad, detalleFechaIngreso, detalleHoraIngreso,tipoDocumento,numDocumento;
     ImageView detalleImagen;
     Button btnRegresar;
 
@@ -27,6 +27,8 @@ public class DetallePermisoIngresoActivity extends AppCompatActivity {
         detalleNomUsuario = findViewById(R.id.detalleNomUsuario);
         detalleArea = findViewById(R.id.detalleArea);
         detalleMotivo = findViewById(R.id.detalleMotivo);
+        tipoDocumento = findViewById(R.id.tipoDocumento);
+        numDocumento = findViewById(R.id.numDocumento);
         detalleTipoMovilidad = findViewById(R.id.detalleTipoMovilidad);
         detalleFechaIngreso = findViewById(R.id.detalleFechaIngreso);
         detalleHoraIngreso = findViewById(R.id.detalleHoraIngreso);
@@ -34,6 +36,8 @@ public class DetallePermisoIngresoActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             detalleNomUsuario.setText(bundle.getString("usuario"));
+            tipoDocumento.setText(bundle.getString("tipoDocumento"));
+            numDocumento.setText(bundle.getString("numeroDocumento"));
             detalleArea.setText(bundle.getString("area")); // Asegúrate de que coincide con el putExtra
             detalleMotivo.setText(bundle.getString("motivo"));
             detalleTipoMovilidad.setText(bundle.getString("tipoMicromovilidad"));

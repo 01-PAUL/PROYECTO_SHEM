@@ -55,6 +55,7 @@ public class RegistroIngresoActivity extends AppCompatActivity {
     private Map<Integer, String> tipoUsuarioMap;
     private Map<Integer, String> tipoDocumentoMap;
     boolean isInternalChange = false;
+    private boolean isScanningQR = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,9 +125,11 @@ public class RegistroIngresoActivity extends AppCompatActivity {
         });
 
         txtNumeroDocumento.addTextChangedListener(new TextWatcher() {
+            private int previousLength = 0;
+
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // No es necesario implementar
+                previousLength = s.length();
             }
 
             @Override
@@ -137,51 +140,67 @@ public class RegistroIngresoActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 String input = s.toString();
+
                 // Verificar si hay caracteres no numéricos
                 if (!input.matches("\\d*")) {
                     txtNumeroDocumento.removeTextChangedListener(this); // Evitar bucles
                     // Eliminar caracteres no numéricos
                     txtNumeroDocumento.setText(input.replaceAll("[^\\d]", ""));
-                    txtNumeroDocumento.setSelection(txtNumeroDocumento.getText().length()); // Mover el cursor al final
+                    txtNumeroDocumento.setSelection(txtNumeroDocumento.getText().length());
                     txtNumeroDocumento.addTextChangedListener(this);
                 }
+
+                // Validar si se borró un dígito
+                if (input.length() < previousLength) {
+                    clearDocumento();  // Limpiar los campos si se borró un dígito
+                }
+
+                // Actualizar la longitud previa después de que se haya modificado el texto
+                previousLength = input.length();
+
+                // Aquí podrías agregar lógica para realizar la consulta de los datos si el número de documento es válido
             }
         });
 
         spinnerTipoDocumento.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (isScanningQR) {
+                    isScanningQR = false; // Desactiva la bandera
+                    return; // No realizar validaciones
+                }
+
                 String tipoDocumento = spinnerTipoDocumento.getSelectedItem().toString();
                 String numDocumento = txtNumeroDocumento.getText().toString();
 
                 if (tipoDocumento.equals("DNI")) {
-                    // Limitar la longitud a 8 caracteres
                     txtNumeroDocumento.setFilters(new InputFilter[]{new InputFilter.LengthFilter(8)});
-                    // Si el número actual tiene más de 8 caracteres, recortar
                     if (numDocumento.length() > 8) {
                         txtNumeroDocumento.setText(numDocumento.substring(0, 8));
-                        txtNumeroDocumento.setSelection(8); // Coloca el cursor al final
+                        txtNumeroDocumento.setSelection(8);
                     }
                 } else if (tipoDocumento.equals("Carnet Ext.")) {
-                    // Limitar la longitud a 11 caracteres
                     txtNumeroDocumento.setFilters(new InputFilter[]{new InputFilter.LengthFilter(11)});
                 } else {
-                    // Si no se selecciona un tipo, dejar la longitud máxima en 11
                     txtNumeroDocumento.setFilters(new InputFilter[]{new InputFilter.LengthFilter(11)});
                 }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                // No se seleccionó nada, permitir por defecto hasta 11 caracteres
                 txtNumeroDocumento.setFilters(new InputFilter[]{new InputFilter.LengthFilter(11)});
             }
         });
 
         txtCodigoUsuario.addTextChangedListener(new TextWatcher() {
+
+            private boolean isInternalChange = false; // Control para evitar bucles infinitos
+            private int previousLengthCodigoUsuario = 0; // Longitud previa del texto en txtCodigoUsuario
+
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // No es necesario implementar
+                // Almacenar la longitud previa antes del cambio
+                previousLengthCodigoUsuario = s.length();
             }
 
             @Override
@@ -195,14 +214,23 @@ public class RegistroIngresoActivity extends AppCompatActivity {
                 isInternalChange = true;
 
                 String input = s.toString();
+
+                // Verificar si hay espacios iniciales y eliminarlos
                 if (!input.isEmpty() && input.charAt(0) == ' ') {
-                    // Eliminar espacios iniciales
                     txtCodigoUsuario.setText(input.trim());
                     txtCodigoUsuario.setSelection(txtCodigoUsuario.getText().length());
                 } else {
                     // Limitar la longitud máxima
                     txtCodigoUsuario.setFilters(new InputFilter[]{new InputFilter.LengthFilter(10)});
                 }
+
+                // Verificar si se borró un dígito (la longitud actual es menor que la previa)
+                if (input.length() < previousLengthCodigoUsuario) {
+                    clearCodigo(); // Limpiar los campos excepto txtNumeroDocumento
+                }
+
+                // Actualizar la longitud previa
+                previousLengthCodigoUsuario = input.length();
 
                 isInternalChange = false;
             }
@@ -211,37 +239,39 @@ public class RegistroIngresoActivity extends AppCompatActivity {
         spinnerTipoUsuario.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String tipoUsuario = spinnerTipoUsuario.getSelectedItem().toString();
+                if (isScanningQR) {
+                    isScanningQR = false; // Desactiva la bandera
+                    return; // No realizar validaciones
+                }
 
+                String tipoUsuario = spinnerTipoUsuario.getSelectedItem().toString();
                 if (tipoUsuario.equals("Seleccione:")) {
-                    // Restablecer el campo si se selecciona "Seleccione"
                     txtCodigoUsuario.setText("");
                     txtCodigoUsuario.setFilters(new InputFilter[]{new InputFilter.LengthFilter(10)});
-                    return; // Salir para evitar operaciones adicionales
+                    return;
                 }
 
                 String codigoUsuarioActual = txtCodigoUsuario.getText().toString();
                 if (!codigoUsuarioActual.isEmpty()) {
-                    // Obtener la letra inicial correcta según el tipo
                     char letraInicial = getLetraInicial(tipoUsuario,
                             Character.isLowerCase(codigoUsuarioActual.charAt(0)));
-                    // Actualizar el texto del código usuario
                     String nuevoCodigo = letraInicial + codigoUsuarioActual.substring(1);
                     txtCodigoUsuario.setText(nuevoCodigo);
-                    txtCodigoUsuario.setSelection(nuevoCodigo.length()); // Mover el cursor al final
+                    txtCodigoUsuario.setSelection(nuevoCodigo.length());
                 }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                // Comportamiento por defecto si nada está seleccionado
                 txtCodigoUsuario.setFilters(new InputFilter[]{new InputFilter.LengthFilter(10)});
             }
         });
 
+
         btnEscanearQR.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                isScanningQR = true; // Indicar que se está escaneando un QR
                 IntentIntegrator integrador = new IntentIntegrator(RegistroIngresoActivity.this);
                 integrador.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
                 integrador.setPrompt("lector - CDP");
@@ -251,6 +281,7 @@ public class RegistroIngresoActivity extends AppCompatActivity {
                 integrador.initiateScan();
             }
         });
+
 
         //Consultar por Codigo Usuario y Número de Documento
         btnConsultar.setOnClickListener(new View.OnClickListener() {
@@ -293,9 +324,11 @@ public class RegistroIngresoActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (validateInputs()) {
-                    String codigoUsuario = txtCodigoUsuario.getText().toString();
+                    String codigoUsuario = txtCodigoUsuario.getText().toString().toUpperCase();
+                    String numeroDocumento = txtNumeroDocumento.getText().toString();
 
-                    registrarIngreso(codigoUsuario);
+                    // Verificar si el usuario ya está registrado como "activo"
+                    verificarIngresoExistente(codigoUsuario, numeroDocumento);
                 }
             }
         });
@@ -339,6 +372,69 @@ public class RegistroIngresoActivity extends AppCompatActivity {
 
         // Convertir a minúscula si el campo actual está en minúscula
         return esMinuscula ? Character.toLowerCase(letra) : letra;
+    }
+
+    private void verificarIngresoExistente(String codigoUsuario, String numeroDocumento) {
+        databaseReference.child("Ingreso")
+                .orderByChild("codigoUsuario")
+                .equalTo(codigoUsuario)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        boolean ingresoActivoEncontrado = false;
+
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            String estado = snapshot.child("estado").getValue(String.class);
+                            if ("activo".equals(estado)) {
+                                ingresoActivoEncontrado = true;
+                                break;
+                            }
+                        }
+
+                        if (ingresoActivoEncontrado) {
+                            Toast.makeText(RegistroIngresoActivity.this, "Usuario ya ingresó a Cibertec", Toast.LENGTH_SHORT).show();
+                        } else {
+                            verificarDocumentoExistente(codigoUsuario, numeroDocumento);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Toast.makeText(RegistroIngresoActivity.this, "Error al verificar ingreso existente", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void verificarDocumentoExistente(String codigoUsuario, String numeroDocumento) {
+        databaseReference.child("Ingreso")
+                .orderByChild("numeroDocumento")
+                .equalTo(numeroDocumento)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        boolean documentoActivoEncontrado = false;
+
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            String estado = snapshot.child("estado").getValue(String.class);
+                            if ("activo".equals(estado)) {
+                                documentoActivoEncontrado = true;
+                                break;
+                            }
+                        }
+
+                        if (documentoActivoEncontrado) {
+                            Toast.makeText(RegistroIngresoActivity.this, "Usuario ya ingresó a Cibertec", Toast.LENGTH_SHORT).show();
+                        } else {
+                            // Si no hay conflictos, registrar el ingreso
+                            registrarIngreso(codigoUsuario);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Toast.makeText(RegistroIngresoActivity.this, "Error al verificar documento existente", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private void registrarIngreso(String codigoUsuario) {
@@ -932,6 +1028,24 @@ public class RegistroIngresoActivity extends AppCompatActivity {
         spinnerTipoUsuario.setSelection(0);
         spinnerTipoDocumento.setSelection(0);
         spinnerMicromovilidad.setSelection(0);
+        imgView.setImageResource(R.drawable.ic_launcher_foreground);
+    }
+
+    private void clearDocumento() {
+        txtUsuario.setText("");
+        txtAutorizacion.setText("");
+        txtCodigoUsuario.setText("");
+        spinnerTipoUsuario.setSelection(0);
+        spinnerTipoDocumento.setSelection(0);
+        imgView.setImageResource(R.drawable.ic_launcher_foreground);
+    }
+
+    private void clearCodigo() {
+        txtUsuario.setText("");
+        txtAutorizacion.setText("");
+        txtNumeroDocumento.setText("");
+        spinnerTipoUsuario.setSelection(0);
+        spinnerTipoDocumento.setSelection(0);
         imgView.setImageResource(R.drawable.ic_launcher_foreground);
     }
 
